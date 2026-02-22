@@ -3,10 +3,30 @@ tg.expand();
 
 let user;
 
+/* ================= PAGE SWITCH ================= */
+
+function showPage(id, element){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(n=>{
+    n.classList.remove("active");
+  });
+
+  if(element){
+    element.classList.add("active");
+  }
+}
+
+/* ================= LOAD USER ================= */
+
 async function loadUser(){
 
   const tgUser = tg.initDataUnsafe.user;
-
   const deviceId = navigator.userAgent;
 
   let res = await fetch("/api/user",{
@@ -26,6 +46,8 @@ async function loadUser(){
   document.getElementById("totalEarn").innerText = user.totalEarn;
 }
 
+/* ================= 2 MINUTE AD SYSTEM ================= */
+
 async function watchAd(){
 
   await fetch("/api/ad-start",{
@@ -34,7 +56,7 @@ async function watchAd(){
     body:JSON.stringify({telegramId:user.telegramId})
   });
 
-  alert("Stay 2 minutes...");
+  alert("Ad started. Stay at least 2 minutes.");
 
   setTimeout(async ()=>{
     await fetch("/api/ad-complete",{
@@ -42,9 +64,13 @@ async function watchAd(){
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({telegramId:user.telegramId})
     });
+
     loadUser();
-  },120000);
+
+  }, 120000); // 2 minutes
 }
+
+/* ================= DAILY BONUS ================= */
 
 async function dailyBonus(){
   await fetch("/api/daily-bonus",{
@@ -52,10 +78,14 @@ async function dailyBonus(){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({telegramId:user.telegramId})
   });
+
   loadUser();
 }
 
+/* ================= WITHDRAW ================= */
+
 async function withdraw(){
+
   const amount = document.getElementById("amount").value;
   const method = document.getElementById("method").value;
   const number = document.getElementById("number").value;
@@ -71,8 +101,10 @@ async function withdraw(){
     })
   });
 
+  alert("Withdraw request sent");
   loadUser();
-  alert("Withdraw sent");
 }
+
+/* ================= INIT ================= */
 
 loadUser();
