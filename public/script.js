@@ -3,23 +3,13 @@ tg.expand();
 
 let user;
 let telegramId;
-let selectedMethod = "Bkash";
-let allWithdrawLogs = [];
-
-/* METHOD SELECT */
-function selectMethod(el, method){
-  document.querySelectorAll(".method").forEach(m=>{
-    m.classList.remove("active");
-  });
-  el.classList.add("active");
-  selectedMethod = method;
-}
 
 /* NAVIGATION */
 function showPage(id, el){
   document.querySelectorAll(".page").forEach(p=>{
     p.classList.remove("active");
   });
+
   document.getElementById(id).classList.add("active");
 
   document.querySelectorAll(".nav").forEach(n=>{
@@ -58,15 +48,42 @@ async function loadUser(){
 
   document.getElementById("username").innerText = tgUser.first_name;
   document.getElementById("avatar").innerText = tgUser.first_name[0];
-
-  document.getElementById("usernameWithdraw").innerText = tgUser.first_name;
-  document.getElementById("avatarLarge").innerText = tgUser.first_name[0];
-
   document.getElementById("balance").innerText = user.balance;
-  document.getElementById("balanceWithdraw").innerText = user.balance;
-
   document.getElementById("todayAds").innerText = user.todayAds+" / 35";
   document.getElementById("totalEarn").innerText = user.totalEarn;
+}
+
+/* MONETAG AD */
+async function watchAd(){
+
+  try{
+    show_10636717().then(async () => {
+
+      let res = await fetch("/api/ad-complete",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({telegramId:telegramId})
+      });
+
+      let data = await res.json();
+      if(data.balance){
+        loadUser();
+      }
+
+    });
+  }catch{
+    console.log("Ad error");
+  }
+}
+
+/* DAILY */
+async function dailyBonus(){
+  await fetch("/api/daily-bonus",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId:telegramId})
+  });
+  loadUser();
 }
 
 /* WITHDRAW */
@@ -74,7 +91,6 @@ async function withdraw(){
 
   const msg = document.getElementById("withdrawMsg");
   msg.innerText = "";
-  msg.style.color = "red";
 
   const amount = parseInt(document.getElementById("amount").value);
   const number = document.getElementById("number").value;
@@ -90,7 +106,7 @@ async function withdraw(){
     body:JSON.stringify({
       telegramId:telegramId,
       amount,
-      method:selectedMethod,
+      method:"Bkash",
       number
     })
   });
@@ -100,11 +116,10 @@ async function withdraw(){
   if(data.msg === "Withdraw request sent"){
     msg.style.color = "#00ff99";
     msg.innerText = "Withdraw request submitted";
-
     loadUser();
     loadWithdrawLogs();
-
   }else{
+    msg.style.color = "red";
     msg.innerText = data.msg;
   }
 }
@@ -113,7 +128,7 @@ async function withdraw(){
 async function loadWithdrawLogs() {
 
   const res = await fetch("/api/user/withdraws/" + telegramId);
-  allWithdrawLogs = await res.json();
+  const logs = await res.json();
 
   const container = document.getElementById("withdrawLogs");
   const pendingBox = document.getElementById("pendingTotal");
@@ -122,13 +137,13 @@ async function loadWithdrawLogs() {
 
   let pendingAmount = 0;
 
-  allWithdrawLogs.forEach(w=>{
+  logs.forEach(w=>{
     if(w.status === "pending"){
       pendingAmount += w.amount;
     }
 
     container.innerHTML += `
-      <div class="withdraw-card">
+      <div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.08);border-radius:8px;">
         <div><strong>৳ ${w.amount}</strong> - ${w.status.toUpperCase()}</div>
         <div>Wallet: ${w.method}</div>
         <div>Number: ${w.number}</div>
@@ -140,37 +155,6 @@ async function loadWithdrawLogs() {
   });
 
   pendingBox.innerHTML = "Total Pending: ৳ " + pendingAmount;
-}
-
-/* DAILY */
-async function dailyBonus(){
-  await fetch("/api/daily-bonus",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({telegramId:telegramId})
-  });
-  loadUser();
-}
-
-/* AD */
-async function watchAd(){
-
-  await fetch("/api/ad-start",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({telegramId:telegramId})
-  });
-
-  alert("Stay 2 minutes...");
-
-  setTimeout(async ()=>{
-    await fetch("/api/ad-complete",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId:telegramId})
-    });
-    loadUser();
-  },120000);
 }
 
 loadUser();
