@@ -5,36 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="stylesheet" href="style.css">
-<title>Earn Dashboard</title>
+<title>Ads Earn Pro</title>
 </head>
 <body>
 
-<div class="container">
+<div class="app">
 
-  <div class="card profile-card">
+  <!-- HEADER -->
+  <div class="profile-card">
     <div class="avatar" id="avatar">U</div>
-    <div>
+    <div class="profile-info">
       <h2 id="username">User</h2>
-      <div class="balance-box">
+      <div class="balance-pill">
         ব্যালেন্স: ৳ <span id="balance">0</span>
       </div>
     </div>
   </div>
 
+  <!-- DASHBOARD -->
   <h3 class="section-title">ড্যাশবোর্ড</h3>
 
-  <div class="grid">
-    <div class="card small-card">
+  <div class="dashboard-grid">
+    <div class="stat-card">
       <p>আজকের দেখা এড</p>
-      <h2 id="todayAds">0</h2>
+      <h2 id="todayAds">0 / 35</h2>
     </div>
 
-    <div class="card small-card">
-      <p>মোট আয়</p>
+    <div class="stat-card">
+      <p>সর্বমোট আয়</p>
       <h2 id="totalEarn">0</h2>
     </div>
   </div>
 
-  <div class="card action-card">
-    <button onclick="watchAd()">🎬 এড দেখুন +5</button>
-    <button onclick="daily()">🎁 ডেইলি বোনাস</button
+  <!-- REFERRAL -->
+  <h3 class="section-title">আমন্ত্রণ এবং আয়</h3>
+
+  <div class="ref-card">
+    <p>বন্ধুদের আমন্ত্রণ করুন—প্রতিজনে বোনাস!</p>
+    <div class="ref-box" id="refLink">Loading...</div>
+
+    <div class="ref-buttons">
+      <button onclick="copyRef()">কপি লিংক</button>
+      <button class="outline">শেয়ার</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active">🏠<span>হোম</span></div>
+  <div class="nav-item">🎧<span>সাপোর্ট</span></div>
+  <div class="nav-item">📋<span>কাজ</span></div>
+  <div class="nav-item">💸<span>উত্তলন</span></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+                    </html>
