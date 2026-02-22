@@ -9,10 +9,14 @@ const UserSchema = new mongoose.Schema({
 
   todayAds: { type: Number, default: 0 },
   lastAdDate: String,
+  lastBonus: String,
 
   referralCode: String,
   referredBy: String,
   inviteCount: { type: Number, default: 0 },
+
+  deviceId: String,
+  ipAddress: String,
 
   blocked: { type: Boolean, default: false },
 
