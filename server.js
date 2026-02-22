@@ -126,7 +126,7 @@ app.post("/api/withdraw", async (req, res) => {
 
   const user = await User.findOne({ telegramId });
 
-  if (amount < 200) return res.json({ msg: "Minimum 200" });
+  if (amount < 50) return res.json({ msg: "Minimum 50" });
   if (user.balance < amount) return res.json({ msg: "Insufficient balance" });
 
   user.balance -= amount;
