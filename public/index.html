@@ -2,16 +2,39 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="style.css">
+<title>Earn Dashboard</title>
 </head>
 <body>
 
-<h2>Earn Bot</h2>
-<h3>Balance: <span id="balance">0</span></h3>
+<div class="container">
 
-<button onclick="watchAd()">Watch Ad +5</button>
-<button onclick="daily()">Daily Bonus</button>
+  <div class="card profile-card">
+    <div class="avatar" id="avatar">U</div>
+    <div>
+      <h2 id="username">User</h2>
+      <div class="balance-box">
+        ব্যালেন্স: ৳ <span id="balance">0</span>
+      </div>
+    </div>
+  </div>
 
-<script src="script.js"></script>
-</body>
-</html>
+  <h3 class="section-title">ড্যাশবোর্ড</h3>
+
+  <div class="grid">
+    <div class="card small-card">
+      <p>আজকের দেখা এড</p>
+      <h2 id="todayAds">0</h2>
+    </div>
+
+    <div class="card small-card">
+      <p>মোট আয়</p>
+      <h2 id="totalEarn">0</h2>
+    </div>
+  </div>
+
+  <div class="card action-card">
+    <button onclick="watchAd()">🎬 এড দেখুন +5</button>
+    <button onclick="daily()">🎁 ডেইলি বোনাস</button
