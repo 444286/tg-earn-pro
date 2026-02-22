@@ -43,15 +43,34 @@
 <!-- WITHDRAW -->
 <div id="withdraw" class="page">
 
-  <h3>উত্তলন</h3>
+  <div class="profile-card">
+    <div class="avatar-large" id="avatarLarge">U</div>
+    <div>
+      <h2 id="usernameWithdraw">User</h2>
+      <div class="balance-badge">৳ <span id="balanceWithdraw">0</span></div>
+    </div>
+  </div>
 
-  <input id="amount" placeholder="Amount">
-  <input id="method" placeholder="Method (Bkash)">
-  <input id="number" placeholder="Number">
+  <div class="glass-card">
 
-  <p id="withdrawMsg" style="font-size:13px;"></p>
+    <h3>উত্তোলন করুন</h3>
 
-  <button onclick="withdraw()">Withdraw</button>
+    <div class="method-select">
+      <div class="method active" onclick="selectMethod(this,'Bkash')">bKash</div>
+      <div class="method" onclick="selectMethod(this,'Nagad')">Nagad</div>
+      <div class="method" onclick="selectMethod(this,'Rocket')">Rocket</div>
+    </div>
+
+    <input id="number" placeholder="নাম্বার (১১ ডিজিট)">
+    <input id="amount" placeholder="টাকার পরিমাণ">
+
+    <p class="min-note">Minimum withdraw amount is 50</p>
+
+    <p id="withdrawMsg"></p>
+
+    <button class="withdraw-btn" onclick="withdraw()">উত্তোলন</button>
+
+  </div>
 
   <hr style="margin:20px 0; opacity:0.2;">
 
@@ -78,4 +97,4 @@
 
 <script src="script.js"></script>
 </body>
-</html>
+  </html>
