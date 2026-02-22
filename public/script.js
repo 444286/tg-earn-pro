@@ -22,9 +22,14 @@ function showPage(id, element){
   }
 }
 
-/* ================= LOAD USER ================= */
+/* ================= LOAD USER SAFE ================= */
 
 async function loadUser(){
+
+  if(!tg.initDataUnsafe || !tg.initDataUnsafe.user){
+    console.log("Open inside Telegram");
+    return;
+  }
 
   const tgUser = tg.initDataUnsafe.user;
   const deviceId = navigator.userAgent;
@@ -33,7 +38,7 @@ async function loadUser(){
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
-      telegramId:tgUser.id,
+      telegramId:String(tgUser.id),
       username:tgUser.first_name,
       deviceId
     })
@@ -41,12 +46,15 @@ async function loadUser(){
 
   user = await res.json();
 
+  // UI update
+  document.getElementById("username").innerText = tgUser.first_name;
+  document.getElementById("avatar").innerText = tgUser.first_name[0];
   document.getElementById("balance").innerText = user.balance;
   document.getElementById("todayAds").innerText = user.todayAds+" / 35";
   document.getElementById("totalEarn").innerText = user.totalEarn;
 }
 
-/* ================= 2 MINUTE AD SYSTEM ================= */
+/* ================= AD SYSTEM ================= */
 
 async function watchAd(){
 
@@ -56,41 +64,60 @@ async function watchAd(){
     body:JSON.stringify({telegramId:user.telegramId})
   });
 
-  alert("Ad started. Stay at least 2 minutes.");
+  alert("Stay at least 2 minutes...");
 
   setTimeout(async ()=>{
-    await fetch("/api/ad-complete",{
+
+    let res = await fetch("/api/ad-complete",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({telegramId:user.telegramId})
     });
 
-    loadUser();
+    let data = await res.json();
 
-  }, 120000); // 2 minutes
+    if(data.balance !== undefined){
+      document.getElementById("balance").innerText = data.balance;
+      document.getElementById("todayAds").innerText =
+        data.todayAds+" / 35";
+      document.getElementById("totalEarn").innerText =
+        data.totalEarn;
+    }else{
+      alert(data.msg);
+    }
+
+  },120000);
 }
 
 /* ================= DAILY BONUS ================= */
 
 async function dailyBonus(){
-  await fetch("/api/daily-bonus",{
+
+  let res = await fetch("/api/daily-bonus",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({telegramId:user.telegramId})
   });
 
-  loadUser();
+  let data = await res.json();
+
+  if(data.balance !== undefined){
+    document.getElementById("balance").innerText = data.balance;
+    document.getElementById("totalEarn").innerText = data.totalEarn;
+  }else{
+    alert(data.msg);
+  }
 }
 
 /* ================= WITHDRAW ================= */
 
 async function withdraw(){
 
-  const amount = document.getElementById("amount").value;
+  const amount = parseInt(document.getElementById("amount").value);
   const method = document.getElementById("method").value;
   const number = document.getElementById("number").value;
 
-  await fetch("/api/withdraw",{
+  let res = await fetch("/api/withdraw",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -101,8 +128,18 @@ async function withdraw(){
     })
   });
 
-  alert("Withdraw request sent");
-  loadUser();
+  let data = await res.json();
+
+  if(data.msg === "Withdraw request sent"){
+
+    // balance auto update
+    user.balance -= amount;
+    document.getElementById("balance").innerText = user.balance;
+
+    alert("Withdraw successful");
+  }else{
+    alert(data.msg);
+  }
 }
 
 /* ================= INIT ================= */
