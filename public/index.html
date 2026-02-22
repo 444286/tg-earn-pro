@@ -12,17 +12,15 @@
 <div class="app">
 
 <!-- HEADER -->
-  <div class="header">
+<div class="header">
   <div class="avatar" id="avatar">U</div>
   <div>
     <h2 id="username">User</h2>
     <div class="balance">৳ <span id="balance">0</span></div>
   </div>
-  </div>
+</div>
 
-
-<!-- PAGES -->
-
+<!-- HOME -->
 <div id="home" class="page active">
   <h3>ড্যাশবোর্ড</h3>
   <div class="card">
@@ -35,21 +33,14 @@
   </div>
 </div>
 
+<!-- TASKS -->
 <div id="tasks" class="page">
   <h3>কাজ</h3>
   <button onclick="watchAd()">🎬 এড দেখুন (+5)</button>
   <button onclick="dailyBonus()">🎁 ডেইলি বোনাস</button>
 </div>
 
-<div id="referral" class="page">
-  <h3>রেফার</h3>
-  <div class="card">
-    <p>আপনার রেফার লিংক</p>
-    <div id="refLink" class="ref-box">Loading...</div>
-    <button onclick="copyRef()">কপি</button>
-  </div>
-</div>
-
+<!-- WITHDRAW -->
 <div id="withdraw" class="page">
   <h3>উত্তলন</h3>
 
@@ -57,18 +48,19 @@
   <input id="method" placeholder="Method (Bkash)">
   <input id="number" placeholder="Number">
 
-  <p id="withdrawInfo" style="color:#ffcc00; font-size:13px;">
-  Minimum withdraw amount is 50
+  <p style="color:#ffcc00;font-size:13px;">
+    Minimum withdraw amount is 50
   </p>
 
-  <p id="withdrawMsg" style="color:red; font-size:13px;"></p>
+  <p id="withdrawMsg" style="font-size:13px;"></p>
 
   <button onclick="withdraw()">Withdraw</button>
 </div>
 
+<!-- SUPPORT -->
 <div id="support" class="page">
   <h3>সাপোর্ট</h3>
-  <p>যোগাযোগ: services.rjcreation@gmail.com</p>
+  <p>@your_support</p>
 </div>
 
 </div>
@@ -77,11 +69,10 @@
 <div class="bottom-nav">
   <div class="nav active" onclick="showPage('home', this)">🏠<span>হোম</span></div>
   <div class="nav" onclick="showPage('tasks', this)">📋<span>কাজ</span></div>
-  <div class="nav" onclick="showPage('referral', this)">👥<span>রেফার</span></div>
   <div class="nav" onclick="showPage('withdraw', this)">💸<span>উত্তলন</span></div>
   <div class="nav" onclick="showPage('support', this)">🎧<span>সাপোর্ট</span></div>
 </div>
 
 <script src="script.js"></script>
 </body>
-    </html>
+  </html>
