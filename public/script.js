@@ -5,10 +5,16 @@ let user;
 
 /* NAVIGATION */
 function showPage(id, el){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
   document.getElementById(id).classList.add("active");
 
-  document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+  document.querySelectorAll(".nav").forEach(n=>{
+    n.classList.remove("active");
+  });
+
   if(el) el.classList.add("active");
 }
 
@@ -41,63 +47,18 @@ async function loadUser(){
   document.getElementById("totalEarn").innerText = user.totalEarn;
 }
 
-/* AD */
-async function watchAd(){
-
-  await fetch("/api/ad-start",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({telegramId:user.telegramId})
-  });
-
-  alert("Stay 2 minutes...");
-
-  setTimeout(async ()=>{
-    let res = await fetch("/api/ad-complete",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId:user.telegramId})
-    });
-
-    let data = await res.json();
-
-    if(data.balance !== undefined){
-      document.getElementById("balance").innerText = data.balance;
-      document.getElementById("todayAds").innerText = data.todayAds+" / 35";
-      document.getElementById("totalEarn").innerText = data.totalEarn;
-    }
-
-  },120000);
-}
-
-/* DAILY */
-async function dailyBonus(){
-  let res = await fetch("/api/daily-bonus",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({telegramId:user.telegramId})
-  });
-
-  let data = await res.json();
-
-  if(data.balance !== undefined){
-    document.getElementById("balance").innerText = data.balance;
-    document.getElementById("totalEarn").innerText = data.totalEarn;
-  }
-}
-
 /* WITHDRAW */
 async function withdraw(){
+
+  const msg = document.getElementById("withdrawMsg");
+  msg.innerText = "";
+  msg.style.color = "red";
 
   const amount = parseInt(document.getElementById("amount").value);
   const method = document.getElementById("method").value;
   const number = document.getElementById("number").value;
-  const msg = document.getElementById("withdrawMsg");
-
-  msg.innerText = "";
 
   if(!amount || !method || !number){
-    msg.style.color = "red";
     msg.innerText = "All fields required";
     return;
   }
@@ -125,6 +86,37 @@ async function withdraw(){
     msg.style.color = "red";
     msg.innerText = data.msg;
   }
+}
+
+/* DAILY */
+async function dailyBonus(){
+  await fetch("/api/daily-bonus",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId:user.telegramId})
+  });
+  loadUser();
+}
+
+/* AD */
+async function watchAd(){
+
+  await fetch("/api/ad-start",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId:user.telegramId})
+  });
+
+  alert("Stay 2 minutes...");
+
+  setTimeout(async ()=>{
+    await fetch("/api/ad-complete",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({telegramId:user.telegramId})
+    });
+    loadUser();
+  },120000);
 }
 
 loadUser();
