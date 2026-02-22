@@ -117,6 +117,14 @@ async function withdraw(){
   const method = document.getElementById("method").value;
   const number = document.getElementById("number").value;
 
+  const msgBox = document.getElementById("withdrawMsg");
+  msgBox.innerText = "";
+
+  if(!amount || !method || !number){
+    msgBox.innerText = "All fields required";
+    return;
+  }
+
   let res = await fetch("/api/withdraw",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -131,6 +139,18 @@ async function withdraw(){
   let data = await res.json();
 
   if(data.msg === "Withdraw request sent"){
+
+    user.balance -= amount;
+    document.getElementById("balance").innerText = user.balance;
+
+    msgBox.style.color = "#00ff99";
+    msgBox.innerText = "Withdraw request sent successfully";
+
+  } else {
+    msgBox.style.color = "red";
+    msgBox.innerText = data.msg;
+  }
+}
 
     // balance auto update
     user.balance -= amount;
