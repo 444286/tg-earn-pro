@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- MONETAG SDK -->
+<script src='//libtl.com/sdk.js'
+        data-zone='10636717'
+        data-sdk='show_10636717'></script>
+
 <link rel="stylesheet" href="style.css">
 <title>Earn Pro</title>
 </head>
@@ -11,7 +18,6 @@
 
 <div class="app">
 
-<!-- HEADER -->
 <div class="header">
   <div class="avatar" id="avatar">U</div>
   <div>
@@ -20,7 +26,6 @@
   </div>
 </div>
 
-<!-- HOME -->
 <div id="home" class="page active">
   <h3>ড্যাশবোর্ড</h3>
   <div class="card">
@@ -33,53 +38,32 @@
   </div>
 </div>
 
-<!-- TASK -->
 <div id="tasks" class="page">
   <h3>কাজ</h3>
   <button onclick="watchAd()">🎬 এড দেখুন (+5)</button>
   <button onclick="dailyBonus()">🎁 ডেইলি বোনাস</button>
 </div>
 
-<!-- WITHDRAW -->
 <div id="withdraw" class="page">
+  <h3>উত্তোলন</h3>
 
-  <div class="profile-card">
-    <div class="avatar-large" id="avatarLarge">U</div>
-    <div>
-      <h2 id="usernameWithdraw">User</h2>
-      <div class="balance-badge">৳ <span id="balanceWithdraw">0</span></div>
-    </div>
-  </div>
+  <input id="number" placeholder="নাম্বার">
+  <input id="amount" placeholder="টাকার পরিমাণ">
 
-  <div class="glass-card">
+  <p style="font-size:13px;opacity:0.7;">
+    Minimum withdraw amount is 50
+  </p>
 
-    <h3>উত্তোলন করুন</h3>
+  <p id="withdrawMsg"></p>
 
-    <div class="method-select">
-      <div class="method active" onclick="selectMethod(this,'Bkash')">bKash</div>
-      <div class="method" onclick="selectMethod(this,'Nagad')">Nagad</div>
-      <div class="method" onclick="selectMethod(this,'Rocket')">Rocket</div>
-    </div>
-
-    <input id="number" placeholder="নাম্বার (১১ ডিজিট)">
-    <input id="amount" placeholder="টাকার পরিমাণ">
-
-    <p class="min-note">Minimum withdraw amount is 50</p>
-
-    <p id="withdrawMsg"></p>
-
-    <button class="withdraw-btn" onclick="withdraw()">উত্তোলন</button>
-
-  </div>
+  <button onclick="withdraw()">Withdraw</button>
 
   <hr style="margin:20px 0; opacity:0.2;">
 
   <div id="pendingTotal"></div>
   <div id="withdrawLogs"></div>
-
 </div>
 
-<!-- SUPPORT -->
 <div id="support" class="page">
   <h3>সাপোর্ট</h3>
   <p>@your_support</p>
@@ -87,7 +71,6 @@
 
 </div>
 
-<!-- NAV -->
 <div class="bottom-nav">
   <div class="nav active" onclick="showPage('home', this)">🏠<span>হোম</span></div>
   <div class="nav" onclick="showPage('tasks', this)">📋<span>কাজ</span></div>
