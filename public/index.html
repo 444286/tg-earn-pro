@@ -5,61 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="stylesheet" href="style.css">
-<title>Ads Earn Pro</title>
+<title>Earn Pro</title>
 </head>
 <body>
 
 <div class="app">
 
-  <!-- HEADER -->
-  <div class="profile-card">
-    <div class="avatar" id="avatar">U</div>
-    <div class="profile-info">
-      <h2 id="username">User</h2>
-      <div class="balance-pill">
-        ব্যালেন্স: ৳ <span id="balance">0</span>
-      </div>
-    </div>
+<!-- HEADER -->
+<div class="header">
+  <div class="avatar" id="avatar">U</div>
+  <div>
+    <h2 id="username">User</h2>
+    <div class="balance">৳ <span id="balance">0</span></div>
   </div>
+</div>
 
-  <!-- DASHBOARD -->
-  <h3 class="section-title">ড্যাশবোর্ড</h3>
+<!-- PAGES -->
 
-  <div class="dashboard-grid">
-    <div class="stat-card">
-      <p>আজকের দেখা এড</p>
-      <h2 id="todayAds">0 / 35</h2>
-    </div>
-
-    <div class="stat-card">
-      <p>সর্বমোট আয়</p>
-      <h2 id="totalEarn">0</h2>
-    </div>
+<div id="home" class="page active">
+  <h3>ড্যাশবোর্ড</h3>
+  <div class="card">
+    <p>আজকের এড</p>
+    <h2 id="todayAds">0 / 35</h2>
   </div>
-
-  <!-- REFERRAL -->
-  <h3 class="section-title">আমন্ত্রণ এবং আয়</h3>
-
-  <div class="ref-card">
-    <p>বন্ধুদের আমন্ত্রণ করুন—প্রতিজনে বোনাস!</p>
-    <div class="ref-box" id="refLink">Loading...</div>
-
-    <div class="ref-buttons">
-      <button onclick="copyRef()">কপি লিংক</button>
-      <button class="outline">শেয়ার</button>
-    </div>
+  <div class="card">
+    <p>মোট আয়</p>
+    <h2 id="totalEarn">0</h2>
   </div>
+</div>
+
+<div id="tasks" class="page">
+  <h3>কাজ</h3>
+  <button onclick="watchAd()">🎬 এড দেখুন (+5)</button>
+  <button onclick="dailyBonus()">🎁 ডেইলি বোনাস</button>
+</div>
+
+<div id="referral" class="page">
+  <h3>রেফার</h3>
+  <div class="card">
+    <p>আপনার রেফার লিংক</p>
+    <div id="refLink" class="ref-box">Loading...</div>
+    <button onclick="copyRef()">কপি</button>
+  </div>
+</div>
+
+<div id="withdraw" class="page">
+  <h3>উত্তলন</h3>
+  <input id="amount" placeholder="Amount">
+  <input id="method" placeholder="Method (Bkash)">
+  <input id="number" placeholder="Number">
+  <button onclick="withdraw()">Withdraw</button>
+</div>
+
+<div id="support" class="page">
+  <h3>সাপোর্ট</h3>
+  <p>যোগাযোগ: @your_support</p>
+</div>
 
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <div class="nav-item active">🏠<span>হোম</span></div>
-  <div class="nav-item">🎧<span>সাপোর্ট</span></div>
-  <div class="nav-item">📋<span>কাজ</span></div>
-  <div class="nav-item">💸<span>উত্তলন</span></div>
+  <div class="nav active" onclick="showPage('home', this)">🏠<span>হোম</span></div>
+  <div class="nav" onclick="showPage('tasks', this)">📋<span>কাজ</span></div>
+  <div class="nav" onclick="showPage('referral', this)">👥<span>রেফার</span></div>
+  <div class="nav" onclick="showPage('withdraw', this)">💸<span>উত্তলন</span></div>
+  <div class="nav" onclick="showPage('support', this)">🎧<span>সাপোর্ট</span></div>
 </div>
 
 <script src="script.js"></script>
 </body>
-                    </html>
+    </html>
