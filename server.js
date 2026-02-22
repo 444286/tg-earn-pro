@@ -138,6 +138,18 @@ app.post("/api/withdraw", async (req, res) => {
   res.json({ msg: "Withdraw request sent" });
 });
 
+/* ================= USER WITHDRAW HISTORY ================= */
+
+app.get("/api/user/withdraws/:telegramId", async (req, res) => {
+
+  const withdraws = await Withdraw.find({
+    telegramId: req.params.telegramId
+  }).sort({ createdAt: -1 });
+
+  res.json(withdraws);
+
+});
+
 /* ================= ADMIN ================= */
 
 app.post("/api/admin/login", (req, res) => {
@@ -151,6 +163,7 @@ app.post("/api/admin/login", (req, res) => {
     res.status(401).json({ msg: "Invalid" });
   }
 });
+
 /* ================= ADMIN MIDDLEWARE ================= */
 
 function verifyAdmin(req, res, next){
@@ -239,5 +252,6 @@ app.post("/api/admin/block", verifyAdmin, async (req,res)=>{
   await User.findOneAndUpdate({telegramId},{blocked:true});
   res.json({msg:"User blocked"});
 });
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("Server running"));
