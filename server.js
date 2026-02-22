@@ -151,6 +151,87 @@ app.post("/api/admin/login", (req, res) => {
     res.status(401).json({ msg: "Invalid" });
   }
 });
+/* ================= ADMIN MIDDLEWARE ================= */
 
+function verifyAdmin(req, res, next){
+  const token = req.headers.authorization;
+  if(!token) return res.status(403).json({msg:"No token"});
+
+  try{
+    jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  }catch{
+    res.status(401).json({msg:"Invalid token"});
+  }
+}
+
+/* ================= ADMIN STATS ================= */
+
+app.get("/api/admin/stats", verifyAdmin, async (req,res)=>{
+  const totalUsers = await User.countDocuments();
+  const totalWithdraw = await Withdraw.countDocuments();
+  const totalPending = await Withdraw.countDocuments({status:"pending"});
+
+  res.json({ totalUsers, totalWithdraw, totalPending });
+});
+
+/* ================= ADMIN USERS ================= */
+
+app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
+  const users = await User.find();
+  res.json(users);
+});
+
+/* ================= ADMIN WITHDRAWS ================= */
+
+app.get("/api/admin/withdraws", verifyAdmin, async (req,res)=>{
+  const wd = await Withdraw.find();
+  res.json(wd);
+});
+
+/* ================= APPROVE ================= */
+
+app.post("/api/admin/approve", verifyAdmin, async (req,res)=>{
+  const { id } = req.body;
+  await Withdraw.findByIdAndUpdate(id,{status:"approved"});
+  res.json({msg:"Approved"});
+});
+
+/* ================= REJECT ================= */
+
+app.post("/api/admin/reject", verifyAdmin, async (req,res)=>{
+  const { id } = req.body;
+
+  const wd = await Withdraw.findById(id);
+  const user = await User.findOne({telegramId:wd.telegramId});
+
+  user.balance += wd.amount;
+  await user.save();
+
+  wd.status="rejected";
+  await wd.save();
+
+  res.json({msg:"Rejected & Refunded"});
+});
+
+/* ================= EDIT BALANCE ================= */
+
+app.post("/api/admin/edit-balance", verifyAdmin, async (req,res)=>{
+  const { telegramId, amount } = req.body;
+
+  const user = await User.findOne({telegramId});
+  user.balance = amount;
+  await user.save();
+
+  res.json({msg:"Balance updated"});
+});
+
+/* ================= BLOCK USER ================= */
+
+app.post("/api/admin/block", verifyAdmin, async (req,res)=>{
+  const { telegramId } = req.body;
+  await User.findOneAndUpdate({telegramId},{blocked:true});
+  res.json({msg:"User blocked"});
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("Server running"));
