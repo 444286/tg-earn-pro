@@ -4,139 +4,240 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-app.use(express.static("public"));
-
-// ===== MongoDB Connection =====
-mongoose.connect(process.env.MONGO_URI)
-.then(()=> console.log("MongoDB Connected"))
-.catch(err=>{
-    console.log("Mongo Error:", err);
-    process.exit(1);
-});
-
-// ===== Models =====
 const User = require("./models/User");
 const Withdraw = require("./models/Withdraw");
-const adminAuth = require("./middleware/auth");
 
-// ===== USER LOGIN =====
-app.post("/login", async(req,res)=>{
-    try{
-        const { id, username } = req.body;
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static("public"));
 
-        let user = await User.findOne({ telegramId:id });
+/* =========================
+   DATABASE CONNECT
+========================= */
 
-        if(!user){
-            user = await User.create({
-                telegramId:id,
-                username,
-                referralCode:id
-            });
-        }
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log(err));
 
-        res.json(user);
-    }catch(err){
-        res.status(500).json({error:"Login error"});
-    }
-});
+/* =========================
+   HELPER FUNCTIONS
+========================= */
 
-// ===== AD REWARD =====
-app.post("/reward", async(req,res)=>{
-    try{
-        const { id } = req.body;
-        let user = await User.findOne({ telegramId:id });
+function generateReferral() {
+  return Math.random().toString(36).substring(2, 8);
+}
 
-        if(!user) return res.status(404).json({msg:"User not found"});
+function todayDate() {
+  return new Date().toISOString().split("T")[0];
+}
 
-        user.balance += 5;
-        await user.save();
+/* =========================
+   USER LOGIN / REGISTER
+========================= */
 
-        res.json(user);
-    }catch{
-        res.status(500).json({error:"Reward error"});
-    }
-});
+app.post("/api/user", async (req, res) => {
+  const { telegramId, username, ref } = req.body;
 
-// ===== DAILY BONUS =====
-app.post("/daily", async(req,res)=>{
-    try{
-        const { id } = req.body;
-        let user = await User.findOne({ telegramId:id });
+  let user = await User.findOne({ telegramId });
 
-        if(!user) return res.status(404).json({msg:"User not found"});
+  if (!user) {
+    const referralCode = generateReferral();
 
-        let today = new Date().toDateString();
+    user = new User({
+      telegramId,
+      username,
+      referralCode
+    });
 
-        if(user.lastDaily !== today){
-            user.balance += 20;
-            user.lastDaily = today;
-            await user.save();
-            return res.json({success:true});
-        }
-
-        res.json({success:false});
-    }catch{
-        res.status(500).json({error:"Daily error"});
-    }
-});
-
-// ===== WITHDRAW =====
-app.post("/withdraw", async(req,res)=>{
-    try{
-        const { id, amount } = req.body;
-        let user = await User.findOne({ telegramId:id });
-
-        if(!user) return res.status(404).json({msg:"User not found"});
-
-        if(user.balance >= amount){
-            user.balance -= amount;
-            await user.save();
-            await Withdraw.create({ telegramId:id, amount });
-            return res.json({success:true});
-        }
-
-        res.json({success:false});
-    }catch{
-        res.status(500).json({error:"Withdraw error"});
-    }
-});
-
-// ===== ADMIN LOGIN =====
-app.post("/admin/login", (req,res)=>{
-    const { username, password } = req.body;
-
-    if(username===process.env.ADMIN_USER &&
-       password===process.env.ADMIN_PASS){
-
-        const token = jwt.sign({admin:true}, process.env.JWT_SECRET);
-        return res.json({token});
+    // Referral Logic
+    if (ref && ref !== telegramId) {
+      const refUser = await User.findOne({ referralCode: ref });
+      if (refUser) {
+        user.referredBy = refUser.telegramId;
+        refUser.balance += 10;
+        refUser.inviteCount += 1;
+        refUser.totalEarn += 10;
+        await refUser.save();
+      }
     }
 
-    res.status(401).json({msg:"Invalid credentials"});
+    await user.save();
+  }
+
+  // Daily Reset
+  if (user.lastAdDate !== todayDate()) {
+    user.todayAds = 0;
+    user.lastAdDate = todayDate();
+    await user.save();
+  }
+
+  res.json(user);
 });
 
-// ===== ADMIN DATA =====
-app.get("/admin/users", adminAuth, async(req,res)=>{
-    const users = await User.find();
-    res.json(users);
+/* =========================
+   WATCH AD (MAX 35/DAY)
+========================= */
+
+app.post("/api/watch-ad", async (req, res) => {
+  const { telegramId } = req.body;
+
+  const user = await User.findOne({ telegramId });
+  if (!user) return res.status(404).json({ msg: "User not found" });
+
+  if (user.blocked) return res.json({ msg: "Blocked" });
+
+  if (user.todayAds >= 35) {
+    return res.json({ msg: "Daily limit reached" });
+  }
+
+  user.balance += 5;
+  user.totalEarn += 5;
+  user.todayAds += 1;
+
+  await user.save();
+
+  res.json(user);
 });
 
-app.get("/admin/withdraws", adminAuth, async(req,res)=>{
-    const data = await Withdraw.find();
-    res.json(data);
+/* =========================
+   DAILY BONUS (1 TIME)
+========================= */
+
+app.post("/api/daily-bonus", async (req, res) => {
+  const { telegramId } = req.body;
+
+  const user = await User.findOne({ telegramId });
+  if (!user) return res.status(404).json({ msg: "User not found" });
+
+  if (user.lastBonus === todayDate()) {
+    return res.json({ msg: "Already claimed" });
+  }
+
+  user.balance += 10;
+  user.totalEarn += 10;
+  user.lastBonus = todayDate();
+
+  await user.save();
+
+  res.json(user);
 });
 
-// ===== ROOT CHECK =====
-app.get("/", (req,res)=>{
-    res.send("TG Earn Pro Running 🚀");
+/* =========================
+   WITHDRAW REQUEST
+========================= */
+
+app.post("/api/withdraw", async (req, res) => {
+  const { telegramId, amount, method, number } = req.body;
+
+  const user = await User.findOne({ telegramId });
+  if (!user) return res.status(404).json({ msg: "User not found" });
+
+  if (amount < 200) {
+    return res.json({ msg: "Minimum withdraw 200" });
+  }
+
+  if (user.balance < amount) {
+    return res.json({ msg: "Insufficient balance" });
+  }
+
+  user.balance -= amount;
+  await user.save();
+
+  const wd = new Withdraw({
+    telegramId,
+    amount,
+    method,
+    number
+  });
+
+  await wd.save();
+
+  res.json({ msg: "Withdraw request sent" });
 });
 
-// ===== PORT FIX FOR RENDER =====
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{
-    console.log("Server running on port", PORT);
+/* =========================
+   GET WITHDRAW HISTORY
+========================= */
+
+app.get("/api/withdraw/:telegramId", async (req, res) => {
+  const data = await Withdraw.find({ telegramId: req.params.telegramId });
+  res.json(data);
 });
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+app.post("/api/admin/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (
+    username === process.env.ADMIN_USER &&
+    password === process.env.ADMIN_PASS
+  ) {
+    const token = jwt.sign({ username }, process.env.JWT_SECRET);
+    res.json({ token });
+  } else {
+    res.status(401).json({ msg: "Invalid credentials" });
+  }
+});
+
+/* =========================
+   ADMIN AUTH MIDDLEWARE
+========================= */
+
+function verifyAdmin(req, res, next) {
+  const token = req.headers.authorization;
+  if (!token) return res.status(403).json({ msg: "No token" });
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    res.status(401).json({ msg: "Invalid token" });
+  }
+}
+
+/* =========================
+   ADMIN ROUTES
+========================= */
+
+app.get("/api/admin/users", verifyAdmin, async (req, res) => {
+  const users = await User.find();
+  res.json(users);
+});
+
+app.get("/api/admin/withdraws", verifyAdmin, async (req, res) => {
+  const wd = await Withdraw.find();
+  res.json(wd);
+});
+
+app.post("/api/admin/approve", verifyAdmin, async (req, res) => {
+  const { id } = req.body;
+
+  await Withdraw.findByIdAndUpdate(id, { status: "approved" });
+  res.json({ msg: "Approved" });
+});
+
+app.post("/api/admin/reject", verifyAdmin, async (req, res) => {
+  const { id } = req.body;
+
+  const wd = await Withdraw.findById(id);
+  const user = await User.findOne({ telegramId: wd.telegramId });
+
+  user.balance += wd.amount;
+  await user.save();
+
+  wd.status = "rejected";
+  await wd.save();
+
+  res.json({ msg: "Rejected & Refunded" });
+});
+
+/* =========================
+   START SERVER
+========================= */
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log("Server running"));
