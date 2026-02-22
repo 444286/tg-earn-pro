@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<style>
+body{background:#111;color:white;font-family:Arial;padding:20px;}
+input,button{padding:6px;margin:4px;}
+table{width:100%;margin-top:15px;border-collapse:collapse;}
+th,td{border:1px solid #333;padding:6px;text-align:center;}
+button{cursor:pointer;}
+.stat{margin:10px 0;}
+</style>
+</head>
+<body>
+
+<h2>Admin Login</h2>
+<input id="adminUser" placeholder="Username">
+<input id="adminPass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<div id="panel" style="display:none;">
+
+<h2>Dashboard Stats</h2>
+<div class="stat" id="stats"></div>
+
+<h2>Users</h2>
+<button onclick="loadUsers()">Load Users</button>
+<table id="usersTable"></table>
+
+<h2>Withdraw Requests</h2>
+<button onclick="loadWithdraws()">Load Withdraws</button>
+<table id="withdrawTable"></table>
+
+</div>
+
+<script>
+let token="";
+
+async function login(){
+  let res=await fetch("/api/admin/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      username:adminUser.value,
+      password:adminPass.value
+    })
+  });
+  let data=await res.json();
+  if(data.token){
+    token=data.token;
+    panel.style.display="block";
+    loadStats();
+  }else alert("Login failed");
+}
+
+async function loadStats(){
+  let res=await fetch("/api/admin/stats",{headers:{Authorization:token}});
+  let s=await res.json();
+  stats.innerHTML=
+  `Total Users: ${s.totalUsers} |
+   Withdraw: ${s.totalWithdraw} |
+   Pending: ${s.totalPending}`;
+}
+
+async function loadUsers(){
+  let res=await fetch("/api/admin/users",{headers:{Authorization:token}});
+  let users=await res.json();
+
+  let html="<tr><th>ID</th><th>Balance</th><th>Edit</th><th>Block</th></tr>";
+
+  users.forEach(u=>{
+    html+=`
+    <tr>
+      <td>${u.telegramId}</td>
+      <td>${u.balance}</td>
+      <td>
+        <input id="bal${u.telegramId}" placeholder="New balance">
+        <button onclick="editBalance('${u.telegramId}')">Save</button>
+      </td>
+      <td>
+        <button onclick="blockUser('${u.telegramId}')">Block</button>
+      </td>
+    </tr>`;
+  });
+
+  usersTable.innerHTML=html;
+}
+
+async function editBalance(id){
+  let val=document.getElementById("bal"+id).value;
+  await fetch("/api/admin/edit-balance",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:token
+    },
+    body:JSON.stringify({telegramId:id,amount:val})
+  });
+  loadUsers();
+}
+
+async function blockUser(id){
+  await fetch("/api/admin/block",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:token
+    },
+    body:JSON.stringify({telegramId:id})
+  });
+  alert("Blocked");
+}
+
+async function loadWithdraws(){
+  let res=await fetch("/api/admin/withdraws",{headers:{Authorization:token}});
+  let wd=await res.json();
+
+  let html="<tr><th>User</th><th>Amount</th><th>Status</th><th>Action</th></tr>";
+
+  wd.forEach(w=>{
+    html+=`
+    <tr>
+      <td>${w.telegramId}</td>
+      <td>${w.amount}</td>
+      <td>${w.status}</td>
+      <td>
+        <button onclick="approve('${w._id}')">Approve</button>
+        <button onclick="reject('${w._id}')">Reject</button>
+      </td>
+    </tr>`;
+  });
+
+  withdrawTable.innerHTML=html;
+}
+
+async function approve(id){
+  await fetch("/api/admin/approve",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:token
+    },
+    body:JSON.stringify({id})
+  });
+  loadWithdraws();
+}
+
+async function reject(id){
+  await fetch("/api/admin/reject",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:token
+    },
+    body:JSON.stringify({id})
+  });
+  loadWithdraws();
+}
+
+</script>
+
+</body>
+</html>
