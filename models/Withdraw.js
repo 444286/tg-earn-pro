@@ -1,12 +1,21 @@
 const mongoose = require("mongoose");
 
-const WithdrawSchema = new mongoose.Schema({
+const withdrawSchema = new mongoose.Schema({
   telegramId: String,
   amount: Number,
   method: String,
   number: String,
-  status: { type: String, default: "pending" },
-  createdAt: { type: Date, default: Date.now }
-});
 
-module.exports = mongoose.model("Withdraw", WithdrawSchema);
+  status: {
+    type: String,
+    default: "pending" // pending | approved | rejected
+  },
+
+  reason: {
+    type: String,
+    default: ""
+  }
+
+}, { timestamps: true });
+
+module.exports = mongoose.model("Withdraw", withdrawSchema);
