@@ -1,11 +1,22 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  telegramId:String,
-  username:String,
-  balance:{type:Number, default:0},
-  referralCode:String,
-  lastDaily:String
+  telegramId: { type: String, unique: true },
+  username: String,
+
+  balance: { type: Number, default: 0 },
+  totalEarn: { type: Number, default: 0 },
+
+  todayAds: { type: Number, default: 0 },
+  lastAdDate: String,
+
+  referralCode: String,
+  referredBy: String,
+  inviteCount: { type: Number, default: 0 },
+
+  blocked: { type: Boolean, default: false },
+
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model("User", UserSchema);
