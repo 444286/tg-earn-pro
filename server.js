@@ -191,10 +191,16 @@ app.get("/api/admin/withdraws", verifyAdmin, async (req,res)=>{
 
 /* ================= APPROVE ================= */
 
-app.post("/api/admin/approve", verifyAdmin, async (req,res)=>{
+app.post("/api/admin/approve", verifyAdmin, async (req, res) => {
+
   const { id } = req.body;
-  await Withdraw.findByIdAndUpdate(id,{status:"approved"});
-  res.json({msg:"Approved"});
+
+  await Withdraw.findByIdAndUpdate(id, {
+    status: "approved",
+    approvedAt: new Date()
+  });
+
+  res.json({ msg: "Approved" });
 });
 
 /* ================= REJECT ================= */
