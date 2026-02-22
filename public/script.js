@@ -2,9 +2,12 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 
 let user;
+let telegramId;
+let allWithdrawLogs = [];
 
 /* NAVIGATION */
 function showPage(id, el){
+
   document.querySelectorAll(".page").forEach(p=>{
     p.classList.remove("active");
   });
@@ -16,6 +19,11 @@ function showPage(id, el){
   });
 
   if(el) el.classList.add("active");
+
+  // Withdraw page open হলে history load
+  if(id === "withdraw"){
+    loadWithdrawLogs();
+  }
 }
 
 /* LOAD USER */
@@ -27,12 +35,13 @@ async function loadUser(){
   }
 
   const tgUser = tg.initDataUnsafe.user;
+  telegramId = String(tgUser.id);
 
   let res = await fetch("/api/user",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
-      telegramId:String(tgUser.id),
+      telegramId:telegramId,
       username:tgUser.first_name,
       deviceId:navigator.userAgent
     })
@@ -47,7 +56,8 @@ async function loadUser(){
   document.getElementById("totalEarn").innerText = user.totalEarn;
 }
 
-/* WITHDRAW */
+/* ================= WITHDRAW ================= */
+
 async function withdraw(){
 
   const msg = document.getElementById("withdrawMsg");
@@ -77,18 +87,124 @@ async function withdraw(){
   let data = await res.json();
 
   if(data.msg === "Withdraw request sent"){
+
     user.balance -= amount;
     document.getElementById("balance").innerText = user.balance;
 
     msg.style.color = "#00ff99";
-    msg.innerText = "Withdraw successful";
+    msg.innerText = "Withdraw request submitted";
+
+    loadWithdrawLogs(); // history refresh
+
   }else{
     msg.style.color = "red";
     msg.innerText = data.msg;
   }
 }
 
-/* DAILY */
+/* ================= WITHDRAW HISTORY ================= */
+
+async function loadWithdrawLogs() {
+
+  const res = await fetch("/api/user/withdraws/" + telegramId);
+  allWithdrawLogs = await res.json();
+
+  renderLogs("all");
+}
+
+function filterLogs(status) {
+  renderLogs(status);
+}
+
+function renderLogs(status) {
+
+  const container = document.getElementById("withdrawLogs");
+  const pendingBox = document.getElementById("pendingTotal");
+
+  container.innerHTML = "";
+
+  let logs = allWithdrawLogs;
+
+  if(status !== "all"){
+    logs = allWithdrawLogs.filter(w => w.status === status);
+  }
+
+  // Calculate total pending
+  let pendingAmount = 0;
+  allWithdrawLogs.forEach(w=>{
+    if(w.status === "pending"){
+      pendingAmount += w.amount;
+    }
+  });
+
+  if(pendingBox){
+    pendingBox.innerHTML = "Total Pending: ৳ " + pendingAmount;
+  }
+
+  if(logs.length === 0){
+    container.innerHTML = "<p style='opacity:0.6'>No transactions found.</p>";
+    return;
+  }
+
+  logs.forEach(w => {
+
+    let statusClass = "status-pending";
+    let icon = "⏳";
+    let statusText = "Pending";
+
+    if(w.status === "approved"){
+      statusClass = "status-approved";
+      icon = "✔";
+      statusText = "Approved";
+    }
+
+    if(w.status === "rejected"){
+      statusClass = "status-rejected";
+      icon = "✖";
+      statusText = "Rejected";
+    }
+
+    container.innerHTML += `
+      <div class="withdraw-card">
+
+        <div class="withdraw-amount">৳ ${w.amount}</div>
+
+        <div class="status-badge ${statusClass}">
+          ${icon} ${statusText}
+        </div>
+
+        <div style="margin-top:6px;font-size:13px;opacity:0.8;">
+          Wallet: ${w.method}
+        </div>
+
+        <div style="font-size:13px;opacity:0.8;">
+          Number: ${w.number}
+        </div>
+
+        ${w.reason ? `
+          <div class="reject-reason">
+            Rejected Amount: ৳ ${w.amount}<br>
+            Reason: ${w.reason}
+          </div>
+        ` : ""}
+
+        ${w.approvedAt ? `
+          <div style="font-size:12px;color:#28a745;margin-top:4px;">
+            Approved at: ${new Date(w.approvedAt).toLocaleString()}
+          </div>
+        ` : ""}
+
+        <div class="withdraw-date">
+          Requested: ${new Date(w.createdAt).toLocaleString()}
+        </div>
+
+      </div>
+    `;
+  });
+}
+
+/* ================= DAILY ================= */
+
 async function dailyBonus(){
   await fetch("/api/daily-bonus",{
     method:"POST",
@@ -98,7 +214,8 @@ async function dailyBonus(){
   loadUser();
 }
 
-/* AD */
+/* ================= AD ================= */
+
 async function watchAd(){
 
   await fetch("/api/ad-start",{
