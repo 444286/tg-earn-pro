@@ -1,20 +1,24 @@
 const mongoose = require("mongoose");
 
 const withdrawSchema = new mongoose.Schema({
+
   telegramId: String,
   amount: Number,
-  method: String,
-  number: String,
+
+  method: String,   // bkash / nagad
+  number: String,   // wallet number
 
   status: {
     type: String,
-    default: "pending" // pending | approved | rejected
+    default: "pending"
   },
 
   reason: {
     type: String,
     default: ""
-  }
+  },
+
+  approvedAt: Date
 
 }, { timestamps: true });
 
