@@ -9,12 +9,15 @@ async function login(){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
       id:userData.id,
-      username:userData.username
+      username:userData.first_name
     })
   });
 
   let data = await res.json();
+
   document.getElementById("balance").innerText = data.balance;
+  document.getElementById("username").innerText = userData.first_name;
+  document.getElementById("avatar").innerText = userData.first_name[0];
 }
 
 async function watchAd(){
