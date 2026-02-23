@@ -5,7 +5,7 @@ let AdController;
 window.addEventListener("load", () => {
   if (window.Adsgram) {
     AdController = window.Adsgram.init({
-      blockId: "int-23576"
+      blockId: "int-23577"
     });
   }
 });
