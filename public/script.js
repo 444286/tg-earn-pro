@@ -62,7 +62,24 @@ async function loadUser(){
 }
 
 /* MONETAG AD */
+async function watchAd(){
 
+  console.log("Button clicked");
+
+  if(!AdController){
+    alert("AdController not ready");
+    console.log("AdController missing");
+    return;
+  }
+
+  try{
+    console.log("Showing ad...");
+    await AdController.show();
+    alert("Ad finished");
+  }catch(e){
+    console.log("Ad error:", e);
+  }
+}
 
 /* DAILY */
 async function dailyBonus(){
