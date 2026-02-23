@@ -1,6 +1,14 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
+let AdController;
 
+window.addEventListener("load", () => {
+  if (window.Adsgram) {
+    AdController = window.Adsgram.init({
+      blockId: "int-23575"
+    });
+  }
+});
 let user;
 let telegramId;
 
