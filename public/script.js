@@ -62,27 +62,7 @@ async function loadUser(){
 }
 
 /* MONETAG AD */
-async function watchAd(){
 
-  try{
-    show_10636717().then(async () => {
-
-      let res = await fetch("/api/ad-complete",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({telegramId:telegramId})
-      });
-
-      let data = await res.json();
-      if(data.balance){
-        loadUser();
-      }
-
-    });
-  }catch{
-    console.log("Ad error");
-  }
-}
 
 /* DAILY */
 async function dailyBonus(){
