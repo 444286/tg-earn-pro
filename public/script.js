@@ -44,11 +44,23 @@ async function loadUser(){
 /* DAILY CHECK-IN */
 async function dailyCheckIn(){
 
-  await fetch("/api/daily-bonus",{
+  let res = await fetch("/api/daily-bonus",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({telegramId:telegramId})
   });
+
+  let data = await res.json();
+
+  if(data.msg === "Already claimed"){
+    alert("Already claimed today");
+  } 
+  else if(data.msg === "Success"){
+    alert("Daily bonus added!");
+  }
+  else{
+    alert("Error");
+  }
 
   loadUser();
 }
