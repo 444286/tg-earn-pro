@@ -8,35 +8,89 @@
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
 <link rel="stylesheet" href="style.css">
-<title>Loyalty Rewards</title>
+<title>Community Hub</title>
 </head>
 <body>
 
 <div class="app">
 
+<!-- HEADER -->
 <div class="header">
   <div class="avatar" id="avatar">U</div>
   <div>
     <h2 id="username">User</h2>
-    <div class="balance">Points: <span id="balance">0</span></div>
+    <div class="points">
+      ⭐ <span id="points">0</span> | Level <span id="level">1</span>
+    </div>
   </div>
 </div>
 
-<div id="home" class="page active">
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+  <div class="card big">
+    <h3>Total Points</h3>
+    <h1 id="totalPoints">0</h1>
+  </div>
+</div>
+
+<!-- TASKS -->
+<div id="tasks" class="page">
 
   <div class="card">
-    <p>Total Points</p>
-    <h2 id="totalEarn">0</h2>
+    <h3>Daily Activity</h3>
+    <button onclick="dailyTask()">Complete Daily Task (+3)</button>
   </div>
 
-  <button onclick="dailyCheckIn()">Daily Check-in (+2)</button>
+  <div class="card">
+    <h3>Spin Wheel</h3>
+    <button onclick="spin()">Spin & Win (1-10)</button>
+  </div>
 
-  <button onclick="watchAd()">Watch Ad for Bonus (+5)</button>
+  <div class="card">
+    <h3>Quick Quiz</h3>
+    <p>What is 2 + 2 ?</p>
+    <button onclick="quiz(true)">4</button>
+    <button onclick="quiz(false)">5</button>
+  </div>
+
+  <div class="card">
+    <h3>Referral</h3>
+    <button onclick="referral()">Simulate Referral (+5)</button>
+  </div>
+
+  <div class="card">
+    <h3>Bonus Reward</h3>
+    <button onclick="watchAd()">Watch Ad for Bonus (+5)</button>
+  </div>
 
 </div>
 
+<!-- HISTORY -->
+<div id="historyPage" class="page">
+  <div class="card">
+    <h3>Activity History</h3>
+    <div id="history"></div>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboardPage" class="page">
+  <div class="card">
+    <h3>Top Members</h3>
+    <div id="leaderboard"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div onclick="showPage('dashboard',this)" class="nav-btn active">🏠</div>
+  <div onclick="showPage('tasks',this)" class="nav-btn">🎯</div>
+  <div onclick="showPage('historyPage',this)" class="nav-btn">📜</div>
+  <div onclick="showPage('leaderboardPage',this)" class="nav-btn">🏆</div>
 </div>
 
 <script src="script.js"></script>
 </body>
-</html>
+    </html>
