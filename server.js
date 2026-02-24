@@ -47,16 +47,23 @@ app.post("/api/daily-bonus", async (req, res) => {
   const { telegramId } = req.body;
   const user = await User.findOne({ telegramId });
 
-  if (user.lastBonus === todayDate())
+  if (!user) {
+    return res.json({ msg: "User not found" });
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+
+  if (user.lastBonus === today) {
     return res.json({ msg: "Already claimed" });
+  }
 
   user.balance += 2;
   user.totalEarn += 2;
-  user.lastBonus = todayDate();
+  user.lastBonus = today;
 
   await user.save();
 
-  res.json({ msg: "Daily bonus added", balance: user.balance });
+  res.json({ msg: "Success", balance: user.balance });
 
 });
 
