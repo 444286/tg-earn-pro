@@ -98,11 +98,11 @@ async function watchAd(){
     btn.disabled = true;
 
     let seconds = 30;
-    text.innerText = `⏳ ${seconds}s`;
+    text.innerText = `অপেক্ষা করুন⏳ ${seconds}s`;
 
     const interval = setInterval(()=>{
       seconds--;
-      text.innerText = `⏳ ${seconds}s`;
+      text.innerText = `অপেক্ষা করুন⏳ ${seconds}s`;
       progress.style.width = ((30-seconds)/30)*100 + "%";
 
       if(seconds <= 0){
