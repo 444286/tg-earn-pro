@@ -5,6 +5,24 @@ let telegramId = null;
 let AdController = null;
 let adCooldown = false;
 
+/* Navigation */
+function showPage(id, el){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(n=>{
+    n.classList.remove("active");
+  });
+
+  if(el){
+    el.classList.add("active");
+  }
+}
+
 /* AdsGram Init */
 window.addEventListener("load", () => {
   if(window.Adsgram){
@@ -40,7 +58,7 @@ async function loadUser(){
   document.getElementById("totalEarn").innerText = user.totalEarn;
 }
 
-/* WATCH AD */
+/* Watch Ad */
 async function watchAd(){
 
   const btn = document.getElementById("adBtn");
@@ -76,7 +94,6 @@ async function watchAd(){
     document.getElementById("todayAds").innerText = data.todayAds+" / 35";
     document.getElementById("totalEarn").innerText = data.totalEarn;
 
-    /* Cooldown */
     adCooldown = true;
     btn.disabled = true;
 
