@@ -1,93 +1,131 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-let AdController;
 let telegramId;
-let user;
+let AdController;
 
-/* INIT ADSGRAM */
-window.addEventListener("load", () => {
-  if (window.Adsgram) {
+window.addEventListener("load",()=>{
+  if(window.Adsgram){
     AdController = window.Adsgram.init({
-      blockId: "int-23631"
+      blockId:"YOUR_BLOCK_ID"
     });
   }
 });
 
-/* LOAD USER */
+function showPage(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+}
+
 async function loadUser(){
-
-  if(!tg.initDataUnsafe || !tg.initDataUnsafe.user){
-    return;
-  }
-
   const tgUser = tg.initDataUnsafe.user;
   telegramId = String(tgUser.id);
 
   let res = await fetch("/api/user",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      telegramId:telegramId,
-      username:tgUser.first_name
-    })
+    body:JSON.stringify({telegramId,username:tgUser.first_name})
   });
 
-  user = await res.json();
+  let user = await res.json();
 
   document.getElementById("username").innerText = tgUser.first_name;
   document.getElementById("avatar").innerText = tgUser.first_name[0];
-  document.getElementById("balance").innerText = user.balance;
-  document.getElementById("totalEarn").innerText = user.totalEarn;
+  document.getElementById("points").innerText = user.points;
+  document.getElementById("totalPoints").innerText = user.totalPoints;
+  document.getElementById("level").innerText = user.level;
+
+  renderHistory(user.history || []);
+  loadLeaderboard();
 }
 
-/* DAILY CHECK-IN */
-async function dailyCheckIn(){
+function renderHistory(history){
+  const box = document.getElementById("history");
+  box.innerHTML="";
+  history.slice().reverse().forEach(h=>{
+    box.innerHTML += `<p>+${h.points} ⭐ (${h.type})</p>`;
+  });
+}
 
-  let res = await fetch("/api/daily-bonus",{
+async function dailyTask(){
+  let res = await fetch("/api/daily-task",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({telegramId:telegramId})
+    body:JSON.stringify({telegramId})
   });
 
   let data = await res.json();
+  if(data.msg==="Already done") alert("Already completed today");
+  loadUser();
+}
 
-  if(data.msg === "Already claimed"){
-    alert("Already claimed today");
-  } 
-  else if(data.msg === "Success"){
-    alert("Daily bonus added!");
-  }
-  else{
-    alert("Error");
-  }
+async function spin(){
+  let res = await fetch("/api/spin",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId})
+  });
+
+  let data = await res.json();
+  alert("You won "+data.reward+" points!");
+  loadUser();
+}
+
+async function quiz(correct){
+  await fetch("/api/quiz",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId,correct})
+  });
+
+  if(correct) alert("Correct! +4 points");
+  else alert("Wrong answer");
 
   loadUser();
 }
 
-/* OPTIONAL BONUS AD */
-async function watchAd(){
+async function referral(){
+  await fetch("/api/referral",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId})
+  });
 
+  alert("Referral bonus added!");
+  loadUser();
+}
+
+async function watchAd(){
   if(!AdController){
-    alert("Ad not ready");
+    alert("Ad not active yet");
     return;
   }
 
   try{
     await AdController.show();
-
     await fetch("/api/bonus-ad",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId:telegramId})
+      body:JSON.stringify({telegramId})
     });
-
     loadUser();
-    alert("Bonus Points Added!");
-
   }catch(e){
     console.log("Ad closed");
   }
+}
+
+async function loadLeaderboard(){
+  let res = await fetch("/api/leaderboard");
+  let data = await res.json();
+
+  const box = document.getElementById("leaderboard");
+  box.innerHTML="";
+  data.forEach((u,i)=>{
+    box.innerHTML += `<p>${i+1}. ${u.username} - ${u.totalPoints} ⭐</p>`;
+  });
 }
 
 loadUser();
