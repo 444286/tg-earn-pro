@@ -9,7 +9,7 @@ let user;
 window.addEventListener("load", () => {
   if (window.Adsgram) {
     AdController = window.Adsgram.init({
-      blockId: "YOUR_BLOCK_ID"
+      blockId: "int-23631"
     });
   }
 });
