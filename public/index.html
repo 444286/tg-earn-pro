@@ -5,14 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-
-        <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-<!-- MONETAG SDK -->
-
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
 <link rel="stylesheet" href="style.css">
-<title>Earn Pro</title>
+<title>Loyalty Rewards</title>
 </head>
 <body>
 
@@ -22,62 +18,25 @@
   <div class="avatar" id="avatar">U</div>
   <div>
     <h2 id="username">User</h2>
-    <div class="balance">৳ <span id="balance">0</span></div>
+    <div class="balance">Points: <span id="balance">0</span></div>
   </div>
 </div>
 
 <div id="home" class="page active">
-  <h3>ড্যাশবোর্ড</h3>
+
   <div class="card">
-    <p>আজকের এড</p>
-    <h2 id="todayAds">0 / 35</h2>
-  </div>
-  <div class="card">
-    <p>মোট আয়</p>
+    <p>Total Points</p>
     <h2 id="totalEarn">0</h2>
   </div>
-</div>
 
-<div id="tasks" class="page">
-  <h3>কাজ</h3>
-  <button onclick="watchAd()">🎬 এড দেখুন (+5)</button>
-  <button onclick="dailyBonus()">🎁 ডেইলি বোনাস</button>
-</div>
+  <button onclick="dailyCheckIn()">Daily Check-in (+2)</button>
 
-<div id="withdraw" class="page">
-  <h3>উত্তোলন</h3>
-
-  <input id="number" placeholder="নাম্বার">
-  <input id="amount" placeholder="টাকার পরিমাণ">
-
-  <p style="font-size:13px;opacity:0.7;">
-    Minimum withdraw amount is 50
-  </p>
-
-  <p id="withdrawMsg"></p>
-
-  <button onclick="withdraw()">Withdraw</button>
-
-  <hr style="margin:20px 0; opacity:0.2;">
-
-  <div id="pendingTotal"></div>
-  <div id="withdrawLogs"></div>
-</div>
-
-<div id="support" class="page">
-  <h3>সাপোর্ট</h3>
-  <p>@your_support</p>
-</div>
+  <button onclick="watchAd()">Watch Ad for Bonus (+5)</button>
 
 </div>
 
-<div class="bottom-nav">
-  <div class="nav active" onclick="showPage('home', this)">🏠<span>হোম</span></div>
-  <div class="nav" onclick="showPage('tasks', this)">📋<span>কাজ</span></div>
-  <div class="nav" onclick="showPage('withdraw', this)">💸<span>উত্তলন</span></div>
-  <div class="nav" onclick="showPage('support', this)">🎧<span>সাপোর্ট</span></div>
 </div>
 
 <script src="script.js"></script>
 </body>
-  </html>
+</html>
