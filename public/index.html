@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- AdsGram SDK -->
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
 <link rel="stylesheet" href="style.css">
-<title>Community Hub</title>
+<title>Earn Pro</title>
 </head>
 <body>
 
@@ -19,112 +20,50 @@
   <div class="avatar" id="avatar">U</div>
   <div>
     <h2 id="username">User</h2>
-    <div class="points">
-      ⭐ <span id="points">0</span> | Level <span id="level">1</span>
-    </div>
+    <div class="balance">৳ <span id="balance">0</span></div>
   </div>
 </div>
 
-<!-- HOME (Dashboard + Tasks Combined) -->
-<div id="dashboard" class="page active">
-
-  <div class="card big">
-    <h3>Total Points</h3>
-    <h1 id="totalPoints">0</h1>
-  </div>
-
-  <!-- Daily -->
+<!-- HOME -->
+<div id="home" class="page active">
+  <h3>ড্যাশবোর্ড</h3>
   <div class="card">
-    <h3>Daily Activity</h3>
-    <button onclick="dailyTask()">Complete Daily Task (+3)</button>
+    <p>আজকের এড</p>
+    <h2 id="todayAds">0 / 35</h2>
   </div>
-
-  <!-- Spin -->
   <div class="card">
-    <h3>Spin Wheel</h3>
-    <button onclick="spin()">Spin & Win (1-10)</button>
+    <p>মোট আয়</p>
+    <h2 id="totalEarn">0</h2>
   </div>
-
-  <!-- Quiz -->
-  <div class="card">
-    <h3>Quick Quiz</h3>
-    <p>What is 2 + 2 ?</p>
-    <button onclick="quiz(true)">4</button>
-    <button onclick="quiz(false)">5</button>
-  </div>
-
-  <!-- Referral -->
-  <div class="card">
-    <h3>Referral</h3>
-    <button onclick="referral()">Simulate Referral (+5)</button>
-  </div>
-
-  <!-- Ad Bonus -->
-  <div class="card">
-    <h3>Bonus Reward</h3>
-    <button onclick="watchAd()">Watch Ad for Bonus (+5)</button>
-  </div>
-
 </div>
 
-<!-- TASKS PAGE (Same tasks remain) -->
+<!-- TASK -->
 <div id="tasks" class="page">
+  <h3>কাজ</h3>
 
-  <div class="card">
-    <h3>Daily Activity</h3>
-    <button onclick="dailyTask()">Complete Daily Task (+3)</button>
-  </div>
+  <button id="adBtn" onclick="watchAd()" class="ad-btn">
+    <span id="adText">🎬 এড দেখুন (+5)</span>
+    <div class="progress-bar" id="progressBar"></div>
+  </button>
 
-  <div class="card">
-    <h3>Spin Wheel</h3>
-    <button onclick="spin()">Spin & Win (1-10)</button>
-  </div>
-
-  <div class="card">
-    <h3>Quick Quiz</h3>
-    <p>What is 2 + 2 ?</p>
-    <button onclick="quiz(true)">4</button>
-    <button onclick="quiz(false)">5</button>
-  </div>
-
-  <div class="card">
-    <h3>Referral</h3>
-    <button onclick="referral()">Simulate Referral (+5)</button>
-  </div>
-
-  <div class="card">
-    <h3>Bonus Reward</h3>
-    <button onclick="watchAd()">Watch Ad for Bonus (+5)</button>
-  </div>
-
+  <button onclick="dailyBonus()">🎁 ডেইলি বোনাস</button>
 </div>
 
-<!-- HISTORY -->
-<div id="historyPage" class="page">
-  <div class="card">
-    <h3>Activity History</h3>
-    <div id="history"></div>
-  </div>
-</div>
-
-<!-- LEADERBOARD -->
-<div id="leaderboardPage" class="page">
-  <div class="card">
-    <h3>Top Members</h3>
-    <div id="leaderboard"></div>
-  </div>
+<!-- SUPPORT -->
+<div id="support" class="page">
+  <h3>সাপোর্ট</h3>
+  <p>@your_support</p>
 </div>
 
 </div>
 
 <!-- NAV -->
-<div class="nav">
-  <div onclick="showPage('dashboard',this)" class="nav-btn active">🏠</div>
-  <div onclick="showPage('tasks',this)" class="nav-btn">🎯</div>
-  <div onclick="showPage('historyPage',this)" class="nav-btn">📜</div>
-  <div onclick="showPage('leaderboardPage',this)" class="nav-btn">🏆</div>
+<div class="bottom-nav">
+  <div class="nav active" onclick="showPage('home', this)">🏠<span>হোম</span></div>
+  <div class="nav" onclick="showPage('tasks', this)">📋<span>কাজ</span></div>
+  <div class="nav" onclick="showPage('support', this)">🎧<span>সাপোর্ট</span></div>
 </div>
 
 <script src="script.js"></script>
 </body>
-  </html>
+    </html>
