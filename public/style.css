@@ -1,7 +1,7 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#f3f4f8;
+  background:#f4f5f9;
 }
 
 .header-bg{
@@ -21,7 +21,6 @@ body{
 
 .profile{
   display:flex;
-  align-items:center;
   gap:15px;
   color:white;
 }
@@ -35,17 +34,16 @@ body{
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  font-size:22px;
   color:#7b5cff;
 }
 
 .balance-card{
   background:white;
-  margin-top:20px;
   padding:25px;
   border-radius:20px;
   text-align:center;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  margin-top:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
 .balance-card h1{
@@ -56,94 +54,71 @@ body{
 .balance-row{
   display:flex;
   justify-content:space-between;
-  margin-top:20px;
-}
-
-.ads-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
   margin-top:15px;
 }
 
-.ad-slot{
-  padding:20px;
-  border-radius:18px;
-  text-align:center;
-  color:white;
-  cursor:pointer;
-  box-shadow:0 6px 20px rgba(0,0,0,0.1);
-}
-
-.slot1{background:linear-gradient(45deg,#ff9a9e,#fad0c4);}
-.slot2{background:linear-gradient(45deg,#a18cd1,#fbc2eb);}
-.slot3{background:linear-gradient(45deg,#f6d365,#fda085);}
-.slot4{background:linear-gradient(45deg,#84fab0,#8fd3f4);}
-
-.ref-card,.withdraw-card{
+.ad-section{
   background:white;
-  padding:20px;
+  padding:25px;
   border-radius:20px;
-  margin-top:30px;
+  margin-top:20px;
+  text-align:center;
 }
 
-.ref-link-box{
-  display:flex;
-  gap:10px;
+.reward-badge{
+  background:#e8f5e9;
+  padding:8px;
+  border-radius:15px;
+  margin:10px 0;
 }
 
-.ref-link-box input{
-  flex:1;
-  padding:10px;
+.progress-bar{
+  background:#eee;
+  height:8px;
   border-radius:10px;
-  border:1px solid #ccc;
+  margin:10px 0;
 }
 
-.withdraw-card input,
-.withdraw-card select{
-  width:100%;
-  padding:12px;
-  margin-bottom:12px;
+#progressFill{
+  height:8px;
+  background:#7b5cff;
+  width:0%;
   border-radius:10px;
-  border:1px solid #ccc;
 }
 
 button{
   width:100%;
-  padding:12px;
+  padding:14px;
   border:none;
-  border-radius:10px;
-  background:#7b5cff;
+  border-radius:15px;
+  background:#ff3b3b;
   color:white;
+  font-size:16px;
   font-weight:bold;
-  margin-top:5px;
+  transition:0.3s;
 }
 
-.share-btn{
-  background:#4caf50;
+button:disabled{
+  background:gray;
 }
 
 .bottom-nav{
   position:fixed;
-  bottom:20px;
-  left:20px;
-  right:20px;
-  background:#222;
-  border-radius:40px;
+  bottom:0;
+  width:100%;
+  background:white;
   display:flex;
   justify-content:space-around;
-  padding:15px;
+  padding:10px 0;
+  border-top:1px solid #ddd;
 }
 
 .nav{
-  color:white;
-  font-size:20px;
-  cursor:pointer;
+  text-align:center;
+  font-size:14px;
+  color:#999;
 }
 
 .nav.active{
-  color:#ffd54f;
-}
-
-.page{display:none;}
-.page.active{display:block;}
+  color:#7b5cff;
+  }
