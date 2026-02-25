@@ -11,48 +11,44 @@ window.addEventListener("load",()=>{
       blockId:"int-23635"
     });
   }
+  loadUser();
 });
 
 function showPage(id,el){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-
   document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
   el.classList.add("active");
 }
 
 async function loadUser(){
-  const tgUser=tg.initDataUnsafe.user;
-  telegramId=String(tgUser.id);
+  const user=tg.initDataUnsafe.user;
+  telegramId=String(user.id);
 
   const res=await fetch("/api/user",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      telegramId,
-      username:tgUser.first_name
-    })
+    body:JSON.stringify({telegramId})
   });
 
-  const user=await res.json();
+  const data=await res.json();
 
-  document.getElementById("username").innerText=tgUser.first_name;
-  document.getElementById("userid").innerText=telegramId;
-  document.getElementById("avatar").innerText=tgUser.first_name[0];
+  document.getElementById("balance").innerText=data.balance;
+  document.getElementById("totalEarn").innerText=data.totalEarn;
+  document.getElementById("todayAds").innerText=data.todayAds+"/35";
+  document.getElementById("progressFill").style.width=(data.todayAds/35*100)+"%";
 
-  document.getElementById("balance").innerText=user.balance;
-  document.getElementById("totalEarn").innerText=user.totalEarn;
-  document.getElementById("todayAds").innerText=user.todayAds+"/35";
+  document.getElementById("refLink").value=
+    "https://t.me/your_bot?start="+telegramId;
 
-  document.getElementById("progressFill").style.width=(user.todayAds/35*100)+"%";
+  loadWithdrawHistory();
 }
 
 async function watchAd(){
-
   if(cooldown) return;
 
   const btn=document.getElementById("adBtn");
-  const text=document.getElementById("countdownText");
+  const cd=document.getElementById("countdown");
 
   try{
     await AdController.show();
@@ -69,16 +65,16 @@ async function watchAd(){
     btn.disabled=true;
 
     let sec=30;
-    text.innerText="৩০ সেকেন্ড অপেক্ষা করুন";
+    cd.innerText="পুনরায় "+sec+"s পরে";
 
     const timer=setInterval(()=>{
       sec--;
-      text.innerText="পুনরায় বিজ্ঞাপন দেখতে "+sec+"s";
+      cd.innerText="পুনরায় "+sec+"s পরে";
       if(sec<=0){
         clearInterval(timer);
         cooldown=false;
         btn.disabled=false;
-        text.innerText="";
+        cd.innerText="";
       }
     },1000);
 
@@ -87,4 +83,40 @@ async function watchAd(){
   }
 }
 
-loadUser();
+function copyRef(){
+  const input=document.getElementById("refLink");
+  input.select();
+  document.execCommand("copy");
+  alert("Copied!");
+}
+
+async function withdraw(){
+  const method=document.getElementById("method").value;
+  const number=document.getElementById("number").value;
+  const amount=parseInt(document.getElementById("amount").value);
+
+  await fetch("/api/withdraw",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({telegramId,amount,method,number})
+  });
+
+  alert("Withdraw request sent");
+  loadWithdrawHistory();
+}
+
+async function loadWithdrawHistory(){
+  const res=await fetch("/api/user/withdraws/"+telegramId);
+  const data=await res.json();
+  const box=document.getElementById("withdrawHistory");
+  box.innerHTML="";
+
+  data.forEach(w=>{
+    box.innerHTML+=`
+      <div style="margin-bottom:10px;">
+        <b>৳ ${w.amount}</b> - ${w.status}
+        ${w.reason? `<div style="color:red;">Reason: ${w.reason}</div>`:""}
+      </div>
+    `;
+  });
+        }
