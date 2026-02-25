@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const User = require("./models/User");
+const Withdraw = require("./models/Withdraw"); // 🔥 NEW
 
 const app = express();
 app.use(cors());
@@ -66,12 +67,51 @@ app.post("/api/ad-complete", async (req,res)=>{
 
   await user.save();
 
-  res.json({
-    balance:user.balance,
-    todayAds:user.todayAds,
-    totalEarn:user.totalEarn
+  res.json({ success:true }); // 🔥 FIX
+});
+
+/* 🔥 WITHDRAW API */
+app.post("/api/withdraw", async (req,res)=>{
+
+  const { telegramId, amount, method, number } = req.body;
+
+  const user = await User.findOne({telegramId});
+  if(!user) return res.json({success:false});
+
+  // Minimum 50
+  if(amount < 50){
+    return res.json({success:false, message:"Minimum 50"});
+  }
+
+  if(user.balance < amount){
+    return res.json({success:false, message:"Insufficient balance"});
+  }
+
+  // Balance minus
+  user.balance -= amount;
+  await user.save();
+
+  // Save history
+  await Withdraw.create({
+    telegramId,
+    amount,
+    method,
+    number,
+    status:"pending",
+    createdAt:new Date()
   });
 
+  res.json({success:true});
+});
+
+/* 🔥 WITHDRAW HISTORY */
+app.get("/api/user/withdraws/:telegramId", async (req,res)=>{
+
+  const data = await Withdraw.find({
+    telegramId:req.params.telegramId
+  }).sort({createdAt:-1});
+
+  res.json(data);
 });
 
 app.get("/",(req,res)=>{
