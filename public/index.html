@@ -17,87 +17,93 @@
 <!-- ================= HOME ================= -->
 <div id="home" class="page active">
 
-  <div class="profile">
-    <div class="profile-circle" id="avatar">R</div>
-    <div>
-      <h3 id="username">User</h3>
-      <p>ID: <span id="userid">000</span></p>
-    </div>
-  </div>
+<div class="profile">
+<div class="profile-circle" id="avatar">R</div>
+<div>
+<h3 id="username">User</h3>
+<p>ID: <span id="userid">000</span></p>
+</div>
+</div>
 
-  <div class="balance-card">
-    <h4>TOTAL BALANCE</h4>
-    <h1><span id="balance">0</span> টাকা</h1>
+<div class="balance-card">
+<h4>TOTAL BALANCE</h4>
+<h1><span id="balance">0</span> টাকা</h1>
 
-    <div class="balance-row">
-      <div>
-        <strong id="totalEarn">0</strong>
-        <p>Earned</p>
-      </div>
-      <div>
-        <strong id="todayAds">0/35</strong>
-        <p>Today Ads</p>
-      </div>
-    </div>
-  </div>
+<div class="balance-row">
+<div>
+<strong id="totalEarn">0</strong>
+<p>Earned</p>
+</div>
+<div>
+<strong id="todayAds">0/35</strong>
+<p>Today Ads</p>
+</div>
+</div>
+</div>
 
-  <!-- BIG AD CARD -->
-  <div class="big-ad-card">
-    <div class="megaphone">📢</div>
-    <h2>বিজ্ঞাপন দেখুন</h2>
-    <p>প্রতি বিজ্ঞাপন দেখে ২০ টাকা আয় করুন</p>
+<div class="big-ad-card">
+<div class="megaphone">📢</div>
+<h2>বিজ্ঞাপন দেখুন</h2>
+<p>প্রতি বিজ্ঞাপন দেখে ২০ টাকা আয় করুন</p>
 
-    <div class="reward-badge">🎁 রিওয়ার্ড: ২০ টাকা</div>
+<div class="reward-badge">🎁 রিওয়ার্ড: ২০ টাকা</div>
 
-    <div class="progress-bar">
-      <div id="progressFill"></div>
-    </div>
+<div class="progress-bar">
+<div id="progressFill"></div>
+</div>
 
-    <button id="adBtn" onclick="watchAd()">বিজ্ঞাপন দেখুন</button>
-    <div id="countdownText"></div>
-  </div>
+<button id="adBtn" onclick="watchAd()">বিজ্ঞাপন দেখুন</button>
+<div id="countdownText"></div>
+</div>
 
 </div>
 
 <!-- ================= SUPPORT ================= -->
 <div id="support" class="page">
-  <div class="card">
-    <h3>সাপোর্ট</h3>
-    <p>@your_support</p>
-  </div>
+<div class="card">
+<h3>সাপোর্ট</h3>
+<p>@your_support</p>
+</div>
 </div>
 
 <!-- ================= REFERRAL ================= -->
 <div id="referral" class="page">
-  <div class="card">
-    <h3>Referral</h3>
-    <input id="refLink" readonly>
-    <button onclick="copyRef()">Copy</button>
-  </div>
+<div class="card">
+<h3>Referral</h3>
+<input id="refLink" readonly>
+<button onclick="copyRef()">Copy</button>
+</div>
 </div>
 
 <!-- ================= WALLET ================= -->
 <div id="wallet" class="page">
 
-  <div class="card">
-    <h3>Withdraw</h3>
+<!-- BALANCE CARD -->
+<div class="balance-card">
+<h4>TOTAL BALANCE</h4>
+<h1><span id="balanceWithdraw">0</span> টাকা</h1>
+</div>
 
-    <select id="method">
-      <option>Bkash</option>
-      <option>Nagad</option>
-    </select>
+<!-- WITHDRAW CARD -->
+<div class="card">
+<h3>Withdraw</h3>
 
-    <input id="number" placeholder="Account Number">
-    <input id="amount" placeholder="Amount">
+<select id="method">
+<option>Bkash (Minimum 2000)</option>
+<option>Nagad</option>
+</select>
 
-    <button onclick="withdraw()">Request Withdraw</button>
-  </div>
+<input id="number" placeholder="Account Number">
+<input id="amount" placeholder="Amount">
 
-  <!-- HISTORY -->
-  <div class="card">
-    <h3>Withdraw History</h3>
-    <div id="withdrawHistory"></div>
-  </div>
+<button onclick="withdraw()">Request Withdraw</button>
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+<h3>Withdraw History</h3>
+<div id="withdrawHistory"></div>
+</div>
 
 </div>
 
@@ -105,22 +111,25 @@
 
 <!-- ================= NAV ================= -->
 <div class="bottom-nav">
-  <div class="nav active" onclick="showPage('home',this)">
-    <div class="icon">🏠</div>
-    <span>হোম</span>
-  </div>
-  <div class="nav" onclick="showPage('support',this)">
-    <div class="icon">🎧</div>
-    <span>সাপোর্ট</span>
-  </div>
-  <div class="nav" onclick="showPage('referral',this)">
-    <div class="icon">👥</div>
-    <span>রেফার</span>
-  </div>
-  <div class="nav" onclick="showPage('wallet',this)">
-    <div class="icon">💳</div>
-    <span>ওয়ালেট</span>
-  </div>
+<div class="nav active" onclick="showPage('home',this)">
+<div class="icon">🏠</div>
+<span>হোম</span>
+</div>
+
+<div class="nav" onclick="showPage('support',this)">
+<div class="icon">🎧</div>
+<span>সাপোর্ট</span>
+</div>
+
+<div class="nav" onclick="showPage('referral',this)">
+<div class="icon">👥</div>
+<span>রেফার</span>
+</div>
+
+<div class="nav" onclick="showPage('wallet',this)">
+<div class="icon">💳</div>
+<span>ওয়ালেট</span>
+</div>
 </div>
 
 <script src="script.js"></script>
