@@ -165,7 +165,7 @@ btn.innerText = "✅ Success";
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
-},2000);
+},50);
 
 }catch(err){
 
@@ -173,7 +173,7 @@ btn.innerText="❌ Failed";
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
-},2000);
+},50);
 
 }
 
