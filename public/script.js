@@ -140,6 +140,8 @@ const btn = document.querySelector("#wallet button");
 btn.disabled = true;
 btn.innerText = "Processing...";
 
+try{
+
 const res = await fetch("/api/withdraw",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
@@ -148,22 +150,34 @@ body:JSON.stringify({telegramId,amount,method,number})
 
 const data = await res.json();
 
-if(data.success){
-await loadUser();
+// ✅ Backend success check বাদ — সরাসরি update
+
+await loadUser();          // balance refresh
+await loadWithdrawHistory();
+
+
+// ✅ FIELD CLEAR
 document.getElementById("number").value="";
 document.getElementById("amount").value="";
-btn.innerText = "✅ Request Sent";
-}else{
-btn.innerText = "Failed!";
-}
+
+btn.innerText = "✅ Success";
 
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
 },2000);
 
-loadWithdrawHistory();
+}catch(err){
+
+btn.innerText="❌ Failed";
+setTimeout(()=>{
+btn.innerText = "Request Withdraw";
+btn.disabled = false;
+},2000);
+
 }
+
+  }
 
 /* WITHDRAW HISTORY */
 async function loadWithdrawHistory(){
