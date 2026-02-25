@@ -1,5 +1,6 @@
 let token="";
 
+/* ================= LOGIN ================= */
 async function adminLogin(){
 
 const username=document.getElementById("adminUser").value;
@@ -26,6 +27,7 @@ alert("Login failed");
 
 }
 
+/* ================= STATS ================= */
 async function loadStats(){
 const res=await fetch("/api/admin/stats",{headers:{authorization:token}});
 const data=await res.json();
@@ -34,6 +36,7 @@ document.getElementById("totalUsers").innerText=data.totalUsers;
 document.getElementById("pendingCount").innerText=data.totalPending;
 }
 
+/* ================= WITHDRAW LIST ================= */
 async function loadWithdraws(){
 
 const res=await fetch("/api/admin/withdraws",{headers:{authorization:token}});
@@ -43,20 +46,40 @@ const box=document.getElementById("withdrawList");
 box.innerHTML="";
 
 data.forEach(w=>{
+
+let statusColor="#f1c40f";
+if(w.status==="approved") statusColor="green";
+if(w.status==="rejected") statusColor="red";
+
 box.innerHTML+=`
 <div class="card">
-User: ${w.telegramId}<br>
-Amount: ${w.amount}<br>
-Status: ${w.status}<br>
+
+<b>User ID:</b> ${w.telegramId}<br>
+<b>Amount:</b> ৳ ${w.amount}<br>
+<b>Wallet:</b> ${w.method}<br>
+<b>Account:</b> ${w.number}
+<button onclick="copyText('${w.number}')">Copy</button><br>
+
+<b>Status:</b> 
+<span style="color:${statusColor};font-weight:bold;">
+${w.status.toUpperCase()}
+</span><br>
+
+${w.reason ? `<b style="color:red;">Reason:</b> ${w.reason}<br>` : ""}
+
+<br>
 
 <button onclick="approve('${w._id}')">Approve</button>
 <button onclick="reject('${w._id}')">Reject</button>
+
 </div>
 `;
+
 });
 
 }
 
+/* ================= APPROVE ================= */
 async function approve(id){
 
 await fetch("/api/admin/approve",{
@@ -69,9 +92,11 @@ loadWithdraws();
 loadStats();
 }
 
+/* ================= REJECT ================= */
 async function reject(id){
 
 const reason=prompt("Enter reject reason");
+if(!reason) return;
 
 await fetch("/api/admin/reject",{
 method:"POST",
@@ -83,6 +108,7 @@ loadWithdraws();
 loadStats();
 }
 
+/* ================= USERS ================= */
 async function loadUsers(){
 
 const res=await fetch("/api/admin/users",{headers:{authorization:token}});
@@ -92,22 +118,28 @@ const box=document.getElementById("userList");
 box.innerHTML="";
 
 data.forEach(u=>{
+
 box.innerHTML+=`
 <div class="card">
-${u.username} (${u.telegramId})<br>
-Balance: ${u.balance}<br>
+<b>${u.username}</b> (${u.telegramId})<br>
+Balance: ৳ ${u.balance}<br>
+Blocked: ${u.blocked ? "YES" : "NO"}<br>
 
 <button onclick="editBalance('${u.telegramId}')">Edit Balance</button>
 <button onclick="blockUser('${u.telegramId}')">Block</button>
+
 </div>
 `;
+
 });
 
 }
 
+/* ================= EDIT BALANCE ================= */
 async function editBalance(id){
 
 const amount=prompt("Enter new balance");
+if(amount===null) return;
 
 await fetch("/api/admin/edit-balance",{
 method:"POST",
@@ -118,7 +150,10 @@ body:JSON.stringify({telegramId:id,amount})
 loadUsers();
 }
 
+/* ================= BLOCK USER ================= */
 async function blockUser(id){
+
+if(!confirm("Are you sure to block this user?")) return;
 
 await fetch("/api/admin/block",{
 method:"POST",
@@ -128,4 +163,10 @@ body:JSON.stringify({telegramId:id})
 
 alert("User blocked");
 loadUsers();
-  }
+}
+
+/* ================= COPY FUNCTION ================= */
+function copyText(text){
+navigator.clipboard.writeText(text);
+alert("Copied: "+text);
+}
