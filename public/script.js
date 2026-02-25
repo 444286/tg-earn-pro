@@ -44,62 +44,47 @@ async function loadUser(){
   document.getElementById("totalEarn").innerText=user.totalEarn;
   document.getElementById("todayAds").innerText=user.todayAds+"/35";
 
-  document.getElementById("slot1").innerText=user.slot1+"/10 Watched";
-  document.getElementById("slot2").innerText=user.slot2+"/10 Watched";
-  document.getElementById("slot3").innerText=user.slot3+"/10 Watched";
-  document.getElementById("slot4").innerText=user.slot4+"/10 Watched";
-
-  document.getElementById("refLink").value=
-    "https://t.me/your_bot?start="+telegramId;
+  document.getElementById("progressFill").style.width=(user.todayAds/35*100)+"%";
 }
 
-async function watchAd(slot){
+async function watchAd(){
 
   if(cooldown) return;
+
+  const btn=document.getElementById("adBtn");
+  const text=document.getElementById("countdownText");
 
   try{
     await AdController.show();
 
-    const res=await fetch("/api/ad-complete",{
+    await fetch("/api/ad-complete",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId,slot})
+      body:JSON.stringify({telegramId})
     });
-
-    const data=await res.json();
-
-    if(data.msg){
-      alert(data.msg);
-      return;
-    }
 
     loadUser();
 
     cooldown=true;
+    btn.disabled=true;
+
     let sec=30;
+    text.innerText="৩০ সেকেন্ড অপেক্ষা করুন";
 
     const timer=setInterval(()=>{
       sec--;
+      text.innerText="পুনরায় বিজ্ঞাপন দেখতে "+sec+"s";
       if(sec<=0){
         clearInterval(timer);
         cooldown=false;
+        btn.disabled=false;
+        text.innerText="";
       }
     },1000);
 
   }catch(e){
     console.log("Ad closed");
   }
-}
-
-function copyRef(){
-  const input=document.getElementById("refLink");
-  input.select();
-  document.execCommand("copy");
-  alert("Copied!");
-}
-
-function shareRef(){
-  tg.openTelegramLink(document.getElementById("refLink").value);
 }
 
 loadUser();
