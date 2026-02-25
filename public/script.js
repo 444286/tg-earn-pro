@@ -125,14 +125,21 @@ console.log("Ad closed");
 }
 
 /* WITHDRAW */
+
 async function withdraw(){
 
-const method=document.getElementById("method").value;
-const number=document.getElementById("number").value;
-const amount=parseInt(document.getElementById("amount").value);
+const method = document.getElementById("method").value;
+const number = document.getElementById("number").value.trim();
+const amount = parseInt(document.getElementById("amount").value);
 
 if(!amount || !number){
-alert("Fill all fields");
+alert("সব ঘর পূরণ করুন");
+return;
+}
+
+// 🔴 MINIMUM 50 CHECK
+if(amount < 50){
+alert("Minimum withdraw 50 টাকা");
 return;
 }
 
@@ -148,33 +155,34 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({telegramId,amount,method,number})
 });
 
-const data = await res.json();
-
-// ✅ Backend success check বাদ — সরাসরি update
-
-await loadUser();          // balance refresh
+// 🔥 Backend response না দেখেও refresh করবো
+await loadUser();
 await loadWithdrawHistory();
 
-
-// ✅ FIELD CLEAR
+// 🔥 FIELD CLEAR FIX
 document.getElementById("number").value="";
 document.getElementById("amount").value="";
+
+// 🔥 FORCE BALANCE UPDATE
+let currentBalance = parseInt(document.getElementById("balance").innerText);
+let newBalance = currentBalance - amount;
+if(newBalance >= 0){
+animateBalance(newBalance);
+}
 
 btn.innerText = "✅ Success";
 
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
-},50);
+},2000);
 
 }catch(err){
-
-btn.innerText="❌ Failed";
+btn.innerText = "❌ Failed";
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
-},50);
-
+},2000);
 }
 
   }
