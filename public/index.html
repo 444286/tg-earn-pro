@@ -4,66 +4,112 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<!-- AdsGram SDK -->
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
 <link rel="stylesheet" href="style.css">
-<title>Earn Pro</title>
+<title>Earn App</title>
 </head>
 <body>
 
+<div class="header-bg"></div>
+
 <div class="app">
 
-<!-- HEADER -->
-<div class="header">
-  <div class="avatar" id="avatar">U</div>
+<div class="profile">
+  <div class="profile-circle" id="avatar">R</div>
   <div>
-    <h2 id="username">User</h2>
-    <div class="balance">৳ <span id="balance">0</span></div>
+    <h3 id="username">User</h3>
+    <p>ID: <span id="userid">000</span></p>
   </div>
 </div>
 
-<!-- HOME -->
 <div id="home" class="page active">
-  <h3>ড্যাশবোর্ড</h3>
-  <div class="card">
-    <p>আজকের এড</p>
-    <h2 id="todayAds">0 / 35</h2>
+
+  <div class="balance-card">
+    <h4>TOTAL BALANCE</h4>
+    <h1><span id="balance">0</span> টাকা</h1>
+    <div class="balance-row">
+      <div>
+        <strong id="totalEarn">0</strong>
+        <p>Earned</p>
+      </div>
+      <div>
+        <strong id="todayAds">0/35</strong>
+        <p>Today Ads</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <p>মোট আয়</p>
-    <h2 id="totalEarn">0</h2>
+
+  <h3 class="section-title">Daily Ads</h3>
+
+  <div class="ads-grid">
+
+    <div class="ad-slot slot1" onclick="watchAd(1)">
+      <h4>Ad Slot 1</h4>
+      <p>+5.00 টাকা</p>
+      <small id="slot1">0/10 Watched</small>
+    </div>
+
+    <div class="ad-slot slot2" onclick="watchAd(2)">
+      <h4>Ad Slot 2</h4>
+      <p>+5.00 টাকা</p>
+      <small id="slot2">0/10 Watched</small>
+    </div>
+
+    <div class="ad-slot slot3" onclick="watchAd(3)">
+      <h4>Ad Slot 3</h4>
+      <p>+5.00 টাকা</p>
+      <small id="slot3">0/10 Watched</small>
+    </div>
+
+    <div class="ad-slot slot4" onclick="watchAd(4)">
+      <h4>Ad Slot 4</h4>
+      <p>+5.00 টাকা</p>
+      <small id="slot4">0/10 Watched</small>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- REFERRAL -->
+<div id="referral" class="page">
+  <div class="ref-card">
+    <h3>Your Referral Link</h3>
+    <p>Invite friends & earn 70 টাকা</p>
+
+    <div class="ref-link-box">
+      <input id="refLink" readonly>
+      <button onclick="copyRef()">Copy</button>
+    </div>
+
+    <button class="share-btn" onclick="shareRef()">Share</button>
+
   </div>
 </div>
 
-<!-- TASK -->
-<div id="tasks" class="page">
-  <h3>কাজ</h3>
-
-  <button id="adBtn" onclick="watchAd()" class="ad-btn">
-    <span id="adText">🎬 এড দেখুন (+5)</span>
-    <div class="progress-bar" id="progressBar"></div>
-  </button>
-
-  <button onclick="dailyBonus()">🎁 ডেইলি বোনাস</button>
-</div>
-
-<!-- SUPPORT -->
-<div id="support" class="page">
-  <h3>সাপোর্ট</h3>
-  <p>@your_support</p>
+<!-- WITHDRAW -->
+<div id="withdraw" class="page">
+  <div class="withdraw-card">
+    <h3>Withdraw</h3>
+    <select id="method">
+      <option>Bkash (Minimum 200)</option>
+      <option>Nagad</option>
+      <option>Rocket</option>
+    </select>
+    <input id="number" placeholder="Account Number">
+    <input id="amount" placeholder="Amount">
+    <button onclick="withdraw()">Request Withdraw</button>
+  </div>
 </div>
 
 </div>
 
-<!-- NAV -->
 <div class="bottom-nav">
-  <div class="nav active" onclick="showPage('home', this)">🏠<span>হোম</span></div>
-  <div class="nav" onclick="showPage('tasks', this)">📋<span>কাজ</span></div>
-  <div class="nav" onclick="showPage('support', this)">🎧<span>সাপোর্ট</span></div>
+  <div class="nav active" onclick="showPage('home',this)">🏠</div>
+  <div class="nav" onclick="showPage('referral',this)">👥</div>
+  <div class="nav" onclick="showPage('withdraw',this)">👤</div>
 </div>
 
 <script src="script.js"></script>
 </body>
-    </html>
+  </html>
