@@ -17,7 +17,9 @@ const UserSchema = new mongoose.Schema({
 
   deviceId: String,
   ipAddress: String,
-
+if(user.blocked){
+  return res.json({ blocked:true });
+    }
   blocked: { type: Boolean, default: false },
 
   createdAt: { type: Date, default: Date.now }
