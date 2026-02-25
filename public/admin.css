@@ -1,0 +1,34 @@
+body{
+font-family:Arial;
+background:#f5f6fb;
+padding:20px;
+}
+
+.login-box, #dashboard{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+input{
+display:block;
+margin-bottom:10px;
+padding:10px;
+width:100%;
+}
+
+button{
+padding:10px;
+background:#2979ff;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+.card{
+background:#f9f9f9;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+  }
