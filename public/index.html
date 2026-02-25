@@ -6,17 +6,27 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <link rel="stylesheet" href="style.css">
-<title>Money's City</title>
+<title>Red WaterMelon</title>
 </head>
 <body>
 
+<div class="header-bg"></div>
+
 <div class="app">
 
-<!-- HOME -->
+<!-- ================= HOME ================= -->
 <div id="home" class="page active">
 
+  <div class="profile">
+    <div class="profile-circle" id="avatar">R</div>
+    <div>
+      <h3 id="username">User</h3>
+      <p>ID: <span id="userid">000</span></p>
+    </div>
+  </div>
+
   <div class="balance-card">
-    <h3>TOTAL BALANCE</h3>
+    <h4>TOTAL BALANCE</h4>
     <h1><span id="balance">0</span> টাকা</h1>
 
     <div class="balance-row">
@@ -31,28 +41,25 @@
     </div>
   </div>
 
-  <!-- AD SECTION -->
-  <div class="ad-box">
-
+  <!-- BIG AD CARD -->
+  <div class="big-ad-card">
     <div class="megaphone">📢</div>
-
     <h2>বিজ্ঞাপন দেখুন</h2>
-    <p>প্রতি বিজ্ঞাপন দেখে ২০ টাকা ইনকাম করুন</p>
+    <p>প্রতি বিজ্ঞাপন দেখে ২০ টাকা আয় করুন</p>
 
-    <div class="reward">🎁 রিওয়ার্ড: ২০ টাকা</div>
+    <div class="reward-badge">🎁 রিওয়ার্ড: ২০ টাকা</div>
 
-    <div class="progress">
+    <div class="progress-bar">
       <div id="progressFill"></div>
     </div>
 
     <button id="adBtn" onclick="watchAd()">বিজ্ঞাপন দেখুন</button>
-    <div id="countdown"></div>
-
+    <div id="countdownText"></div>
   </div>
 
 </div>
 
-<!-- SUPPORT -->
+<!-- ================= SUPPORT ================= -->
 <div id="support" class="page">
   <div class="card">
     <h3>সাপোর্ট</h3>
@@ -60,7 +67,7 @@
   </div>
 </div>
 
-<!-- REFERRAL -->
+<!-- ================= REFERRAL ================= -->
 <div id="referral" class="page">
   <div class="card">
     <h3>Referral</h3>
@@ -69,7 +76,7 @@
   </div>
 </div>
 
-<!-- WALLET -->
+<!-- ================= WALLET ================= -->
 <div id="wallet" class="page">
 
   <div class="card">
@@ -86,6 +93,7 @@
     <button onclick="withdraw()">Request Withdraw</button>
   </div>
 
+  <!-- HISTORY -->
   <div class="card">
     <h3>Withdraw History</h3>
     <div id="withdrawHistory"></div>
@@ -95,29 +103,24 @@
 
 </div>
 
-<!-- NAV -->
+<!-- ================= NAV ================= -->
 <div class="bottom-nav">
-
   <div class="nav active" onclick="showPage('home',this)">
     <div class="icon">🏠</div>
-    <div class="label">হোম</div>
+    <span>হোম</span>
   </div>
-
   <div class="nav" onclick="showPage('support',this)">
     <div class="icon">🎧</div>
-    <div class="label">সাপোর্ট</div>
+    <span>সাপোর্ট</span>
   </div>
-
   <div class="nav" onclick="showPage('referral',this)">
     <div class="icon">👥</div>
-    <div class="label">রেফার</div>
+    <span>রেফার</span>
   </div>
-
   <div class="nav" onclick="showPage('wallet',this)">
     <div class="icon">💳</div>
-    <div class="label">ওয়ালেট</div>
+    <span>ওয়ালেট</span>
   </div>
-
 </div>
 
 <script src="script.js"></script>
