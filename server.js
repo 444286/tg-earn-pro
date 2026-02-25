@@ -60,8 +60,8 @@ app.post("/api/ad-complete", async (req,res)=>{
     return res.json({msg:"Daily limit reached"});
   }
 
-  user.balance += 5;
-  user.totalEarn += 5;
+  user.balance += 20;
+  user.totalEarn += 20;
   user.todayAds += 1;
 
   await user.save();
