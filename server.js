@@ -28,6 +28,10 @@ app.post("/api/user", async (req,res)=>{
 
   let user = await User.findOne({telegramId});
 
+  if(user && user.blocked){
+    return res.json({ blocked:true });
+  }
+
   if(!user){
     user = new User({
       telegramId,
@@ -39,10 +43,6 @@ app.post("/api/user", async (req,res)=>{
       blocked:false
     });
     await user.save();
-  }
-
-  if(user.blocked){
-    return res.json({ blocked:true });
   }
 
   if(user.lastAdDate !== todayDate()){
@@ -60,6 +60,10 @@ app.post("/api/ad-complete", async (req,res)=>{
   const { telegramId } = req.body;
   const user = await User.findOne({telegramId});
   if(!user) return res.json({msg:"User not found"});
+
+  if(user.blocked){
+    return res.json({blocked:true});
+  }
 
   if(user.todayAds >= 35){
     return res.json({msg:"Daily limit reached"});
@@ -79,6 +83,10 @@ app.post("/api/withdraw", async (req,res)=>{
   const { telegramId, amount, method, number } = req.body;
   const user = await User.findOne({telegramId});
   if(!user) return res.json({success:false});
+
+  if(user.blocked){
+    return res.json({blocked:true});
+  }
 
   if(amount < 50){
     return res.json({success:false, message:"Minimum 50"});
@@ -167,19 +175,13 @@ app.get("/api/admin/withdraws", verifyAdmin, async (req,res)=>{
 
 /* ================= APPROVE ================= */
 app.post("/api/admin/approve", verifyAdmin, async (req,res)=>{
-
   const { id } = req.body;
-
-  await Withdraw.findByIdAndUpdate(id,{
-    status:"approved"
-  });
-
+  await Withdraw.findByIdAndUpdate(id,{ status:"approved" });
   res.json({ success:true });
 });
 
 /* ================= REJECT + REFUND ================= */
 app.post("/api/admin/reject", verifyAdmin, async (req,res)=>{
-
   const { id, reason } = req.body;
 
   const wd = await Withdraw.findById(id);
@@ -199,27 +201,25 @@ app.post("/api/admin/reject", verifyAdmin, async (req,res)=>{
 
 /* ================= EDIT BALANCE ================= */
 app.post("/api/admin/edit-balance", verifyAdmin, async (req,res)=>{
-
   const { telegramId, amount } = req.body;
   const user = await User.findOne({telegramId});
   if(!user) return res.json({success:false});
-
   user.balance = amount;
   await user.save();
-
   res.json({ success:true });
 });
 
 /* ================= BLOCK USER ================= */
 app.post("/api/admin/block", verifyAdmin, async (req,res)=>{
-
   const { telegramId } = req.body;
+  await User.findOneAndUpdate({ telegramId },{ blocked:true });
+  res.json({ success:true });
+});
 
-  await User.findOneAndUpdate(
-    { telegramId },
-    { blocked:true }
-  );
-
+/* ================= UNBLOCK USER ================= */
+app.post("/api/admin/unblock", verifyAdmin, async (req,res)=>{
+  const { telegramId } = req.body;
+  await User.findOneAndUpdate({ telegramId },{ blocked:false });
   res.json({ success:true });
 });
 
