@@ -14,6 +14,7 @@
 
 <div class="app">
 
+<!-- PROFILE -->
 <div class="profile">
   <div class="profile-circle" id="avatar">R</div>
   <div>
@@ -22,6 +23,7 @@
   </div>
 </div>
 
+<!-- HOME -->
 <div id="home" class="page active">
 
   <div class="balance-card">
@@ -39,77 +41,55 @@
     </div>
   </div>
 
-  <h3 class="section-title">Daily Ads</h3>
+  <!-- BIG AD SECTION -->
+  <div class="ad-section">
+    <h3>বিজ্ঞাপন দেখুন</h3>
+    <p>প্রতি বিজ্ঞাপনে ২০ টাকা আয় করুন</p>
 
-  <div class="ads-grid">
+    <div class="reward-badge">🎁 রিওয়ার্ড: ২০ টাকা</div>
 
-    <div class="ad-slot slot1" onclick="watchAd(1)">
-      <h4>Ad Slot 1</h4>
-      <p>+5.00 টাকা</p>
-      <small id="slot1">0/10 Watched</small>
+    <div class="progress-bar">
+      <div id="progressFill"></div>
     </div>
 
-    <div class="ad-slot slot2" onclick="watchAd(2)">
-      <h4>Ad Slot 2</h4>
-      <p>+5.00 টাকা</p>
-      <small id="slot2">0/10 Watched</small>
-    </div>
-
-    <div class="ad-slot slot3" onclick="watchAd(3)">
-      <h4>Ad Slot 3</h4>
-      <p>+5.00 টাকা</p>
-      <small id="slot3">0/10 Watched</small>
-    </div>
-
-    <div class="ad-slot slot4" onclick="watchAd(4)">
-      <h4>Ad Slot 4</h4>
-      <p>+5.00 টাকা</p>
-      <small id="slot4">0/10 Watched</small>
-    </div>
-
+    <button id="adBtn" onclick="watchAd()">বিজ্ঞাপন দেখুন</button>
+    <div id="countdownText"></div>
   </div>
 
-</div>
-
-<!-- REFERRAL -->
-<div id="referral" class="page">
-  <div class="ref-card">
-    <h3>Your Referral Link</h3>
-    <p>Invite friends & earn 70 টাকা</p>
-
-    <div class="ref-link-box">
-      <input id="refLink" readonly>
-      <button onclick="copyRef()">Copy</button>
-    </div>
-
-    <button class="share-btn" onclick="shareRef()">Share</button>
-
-  </div>
 </div>
 
 <!-- WITHDRAW -->
-<div id="withdraw" class="page">
+<div id="wallet" class="page">
+
   <div class="withdraw-card">
     <h3>Withdraw</h3>
+
     <select id="method">
-      <option>Bkash (Minimum 200)</option>
+      <option>Bkash</option>
       <option>Nagad</option>
-      <option>Rocket</option>
     </select>
+
     <input id="number" placeholder="Account Number">
     <input id="amount" placeholder="Amount">
+
     <button onclick="withdraw()">Request Withdraw</button>
   </div>
-</div>
+
+  <div class="history-card">
+    <h3>Withdraw History</h3>
+    <div id="withdrawHistory"></div>
+  </div>
 
 </div>
 
+</div>
+
+<!-- CLEAN NAVBAR -->
 <div class="bottom-nav">
-  <div class="nav active" onclick="showPage('home',this)">🏠</div>
-  <div class="nav" onclick="showPage('referral',this)">👥</div>
-  <div class="nav" onclick="showPage('withdraw',this)">👤</div>
+  <div class="nav active" onclick="showPage('home',this)">🏠<span>হোম</span></div>
+  <div class="nav" onclick="showPage('wallet',this)">💼<span>ওয়ালেট</span></div>
 </div>
 
 <script src="script.js"></script>
 </body>
-  </html>
+      </html>
