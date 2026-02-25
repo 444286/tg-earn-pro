@@ -1,17 +1,7 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#f4f5f9;
-}
-
-.header-bg{
-  position:absolute;
-  width:100%;
-  height:220px;
-  background:linear-gradient(135deg,#7b5cff,#b388ff);
-  border-bottom-left-radius:60px;
-  border-bottom-right-radius:60px;
-  z-index:-1;
+  background:#f4f6fb;
 }
 
 .app{
@@ -19,36 +9,17 @@ body{
   padding-bottom:120px;
 }
 
-.profile{
-  display:flex;
-  gap:15px;
-  color:white;
-}
-
-.profile-circle{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  color:#7b5cff;
-}
-
 .balance-card{
   background:white;
-  padding:25px;
+  padding:20px;
   border-radius:20px;
   text-align:center;
-  margin-top:20px;
   box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
 .balance-card h1{
-  font-size:32px;
   color:#7b5cff;
+  font-size:30px;
 }
 
 .balance-row{
@@ -57,24 +28,32 @@ body{
   margin-top:15px;
 }
 
-.ad-section{
-  background:white;
-  padding:25px;
+.ad-box{
+  background:#eef3fb;
   border-radius:20px;
+  padding:25px;
   margin-top:20px;
   text-align:center;
+  border:2px solid #dbe4f7;
 }
 
-.reward-badge{
-  background:#e8f5e9;
+.megaphone{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.reward{
+  background:#d4f5dd;
   padding:8px;
-  border-radius:15px;
+  border-radius:20px;
   margin:10px 0;
+  font-weight:bold;
+  color:green;
 }
 
-.progress-bar{
-  background:#eee;
+.progress{
   height:8px;
+  background:#ddd;
   border-radius:10px;
   margin:10px 0;
 }
@@ -89,17 +68,23 @@ body{
 button{
   width:100%;
   padding:14px;
-  border:none;
-  border-radius:15px;
   background:#ff3b3b;
+  border:none;
+  border-radius:25px;
   color:white;
   font-size:16px;
   font-weight:bold;
-  transition:0.3s;
 }
 
 button:disabled{
   background:gray;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  margin-top:20px;
 }
 
 .bottom-nav{
@@ -109,16 +94,25 @@ button:disabled{
   background:white;
   display:flex;
   justify-content:space-around;
-  padding:10px 0;
-  border-top:1px solid #ddd;
+  padding:8px 0;
+  border-top:1px solid #eee;
 }
 
 .nav{
-  text-align:center;
-  font-size:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:12px;
   color:#999;
 }
 
+.nav .icon{
+  font-size:20px;
+}
+
 .nav.active{
-  color:#7b5cff;
-  }
+  color:#2979ff;
+}
+
+.page{display:none;}
+.page.active{display:block;}
