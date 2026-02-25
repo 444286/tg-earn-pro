@@ -60,6 +60,7 @@ body:JSON.stringify({ telegramId })
 });
 
 const data = await res.json();
+  if(!data) return;
   // 🔴 BLOCK CHECK
 if(data.blocked){
   alert("Your account has been blocked by admin.");
@@ -74,7 +75,7 @@ if(data.blocked){
 
   return;
   }
-if(!data) return;
+
 
 document.getElementById("username").innerText = tgUser.first_name;
 document.getElementById("userid").innerText = telegramId;
