@@ -1,46 +1,31 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-let telegramId = null;
-let AdController = null;
-let adCooldown = false;
+let telegramId;
+let AdController;
+let cooldown=false;
 
-/* Navigation */
-function showPage(id, el){
-
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.remove("active");
-  });
-
-  document.getElementById(id).classList.add("active");
-
-  document.querySelectorAll(".nav").forEach(n=>{
-    n.classList.remove("active");
-  });
-
-  if(el){
-    el.classList.add("active");
-  }
-}
-
-/* AdsGram Init */
-window.addEventListener("load", () => {
+window.addEventListener("load",()=>{
   if(window.Adsgram){
     AdController = window.Adsgram.init({
-      blockId: "int-23635"
+      blockId:"int-23635"
     });
   }
 });
 
-/* Load User */
+function showPage(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+  el.classList.add("active");
+}
+
 async function loadUser(){
+  const tgUser=tg.initDataUnsafe.user;
+  telegramId=String(tgUser.id);
 
-  if(!tg.initDataUnsafe?.user) return;
-
-  const tgUser = tg.initDataUnsafe.user;
-  telegramId = String(tgUser.id);
-
-  const res = await fetch("/api/user",{
+  const res=await fetch("/api/user",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -49,75 +34,72 @@ async function loadUser(){
     })
   });
 
-  const user = await res.json();
+  const user=await res.json();
 
-  document.getElementById("username").innerText = tgUser.first_name;
-  document.getElementById("avatar").innerText = tgUser.first_name[0];
-  document.getElementById("balance").innerText = user.balance;
-  document.getElementById("todayAds").innerText = user.todayAds+" / 35";
-  document.getElementById("totalEarn").innerText = user.totalEarn;
+  document.getElementById("username").innerText=tgUser.first_name;
+  document.getElementById("userid").innerText=telegramId;
+  document.getElementById("avatar").innerText=tgUser.first_name[0];
+
+  document.getElementById("balance").innerText=user.balance;
+  document.getElementById("totalEarn").innerText=user.totalEarn;
+  document.getElementById("todayAds").innerText=user.todayAds+"/35";
+
+  document.getElementById("slot1").innerText=user.slot1+"/10 Watched";
+  document.getElementById("slot2").innerText=user.slot2+"/10 Watched";
+  document.getElementById("slot3").innerText=user.slot3+"/10 Watched";
+  document.getElementById("slot4").innerText=user.slot4+"/10 Watched";
+
+  document.getElementById("refLink").value=
+    "https://t.me/your_bot?start="+telegramId;
 }
 
-/* Watch Ad */
-async function watchAd(){
+async function watchAd(slot){
 
-  const btn = document.getElementById("adBtn");
-  const text = document.getElementById("adText");
-  const progress = document.getElementById("progressBar");
-
-  if(adCooldown) return;
-
-  if(!AdController){
-    alert("Ad not ready");
-    return;
-  }
+  if(cooldown) return;
 
   try{
-
     await AdController.show();
 
-    const res = await fetch("/api/ad-complete",{
+    const res=await fetch("/api/ad-complete",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId})
+      body:JSON.stringify({telegramId,slot})
     });
 
-    const data = await res.json();
+    const data=await res.json();
 
-    if(data.msg === "Daily limit reached"){
-      text.innerText = "Daily Limit Reached (35)";
-      btn.disabled = true;
+    if(data.msg){
+      alert(data.msg);
       return;
     }
 
-    document.getElementById("balance").innerText = data.balance;
-    document.getElementById("todayAds").innerText = data.todayAds+" / 35";
-    document.getElementById("totalEarn").innerText = data.totalEarn;
+    loadUser();
 
-    adCooldown = true;
-    btn.disabled = true;
+    cooldown=true;
+    let sec=30;
 
-    let seconds = 30;
-    text.innerText = `অপেক্ষা করুন⏳ ${seconds}s`;
-
-    const interval = setInterval(()=>{
-      seconds--;
-      text.innerText = `অপেক্ষা করুন⏳ ${seconds}s`;
-      progress.style.width = ((30-seconds)/30)*100 + "%";
-
-      if(seconds <= 0){
-        clearInterval(interval);
-        btn.disabled = false;
-        text.innerText = "🎬 এড দেখুন (+5)";
-        progress.style.width = "0%";
-        adCooldown = false;
+    const timer=setInterval(()=>{
+      sec--;
+      if(sec<=0){
+        clearInterval(timer);
+        cooldown=false;
       }
-
     },1000);
 
   }catch(e){
     console.log("Ad closed");
   }
+}
+
+function copyRef(){
+  const input=document.getElementById("refLink");
+  input.select();
+  document.execCommand("copy");
+  alert("Copied!");
+}
+
+function shareRef(){
+  tg.openTelegramLink(document.getElementById("refLink").value);
 }
 
 loadUser();
