@@ -60,6 +60,20 @@ body:JSON.stringify({ telegramId })
 });
 
 const data = await res.json();
+  // 🔴 BLOCK CHECK
+if(data.blocked){
+  alert("Your account has been blocked by admin.");
+
+  // Telegram Mini App হলে auto close
+  if(window.Telegram && Telegram.WebApp){
+    Telegram.WebApp.close();
+  }else{
+    // Browser হলে blank করে দাও
+    document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Account Blocked</h2>";
+  }
+
+  return;
+  }
 if(!data) return;
 
 document.getElementById("username").innerText = tgUser.first_name;
