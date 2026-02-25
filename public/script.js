@@ -42,21 +42,38 @@ function animateBalance(newBalance){
 }
 
 /* LOAD USER */
-async function loadUser(){
-  const user=tg.initDataUnsafe.user;
-  telegramId=String(user.id);
 
-  const res=await fetch("/api/user",{
+async function loadUser(){
+
+  if(!tg.initDataUnsafe?.user) return;
+
+  const tgUser = tg.initDataUnsafe.user;
+  telegramId = String(tgUser.id);
+
+  const res = await fetch("/api/user",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({telegramId})
+    body:JSON.stringify({
+      telegramId,
+      username:tgUser.first_name
+    })
   });
 
-  const data=await res.json();
+  const data = await res.json();
 
+  // ===== FIXED USER SHOW =====
+  document.getElementById("username").innerText = tgUser.first_name;
+  document.getElementById("userid").innerText = telegramId;
+  document.getElementById("avatar").innerText =
+    tgUser.first_name.charAt(0).toUpperCase();
+
+  document.getElementById("balanceWithdraw").innerText = data.balance;
+
+  // ===== BALANCE ANIMATION =====
   animateBalance(data.balance);
-  document.getElementById("totalEarn").innerText=data.totalEarn;
-  document.getElementById("todayAds").innerText=data.todayAds+"/35";
+
+  document.getElementById("totalEarn").innerText = data.totalEarn;
+  document.getElementById("todayAds").innerText = data.todayAds+"/35";
 
   document.getElementById("progressFill").style.width =
     (data.todayAds/35*100)+"%";
@@ -66,7 +83,6 @@ async function loadUser(){
 
   loadWithdrawHistory();
 }
-
 /* WATCH AD */
 async function watchAd(){
   if(cooldown) return;
@@ -108,12 +124,21 @@ async function watchAd(){
 }
 
 /* WITHDRAW */
+
 async function withdraw(){
+
   const method=document.getElementById("method").value;
   const number=document.getElementById("number").value;
   const amount=parseInt(document.getElementById("amount").value);
 
-  if(!amount || !number) return alert("Fill all fields");
+  if(!amount || !number){
+    alert("Fill all fields");
+    return;
+  }
+
+  const btn = document.querySelector("#wallet button");
+  btn.disabled = true;
+  btn.innerText = "Processing...";
 
   await fetch("/api/withdraw",{
     method:"POST",
@@ -121,9 +146,15 @@ async function withdraw(){
     body:JSON.stringify({telegramId,amount,method,number})
   });
 
-  loadWithdrawHistory();
-}
+  btn.innerText = "✅ Request Sent";
 
+  setTimeout(()=>{
+    btn.innerText = "Withdraw Now";
+    btn.disabled = false;
+  },2000);
+
+  loadWithdrawHistory();
+  }
 /* WITHDRAW HISTORY */
 async function loadWithdrawHistory(){
   const res=await fetch("/api/user/withdraws/"+telegramId);
