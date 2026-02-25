@@ -4,6 +4,7 @@ tg.expand();
 let telegramId;
 let AdController;
 let cooldown=false;
+let lastBalance = 0;
 
 window.addEventListener("load",()=>{
   if(window.Adsgram){
@@ -14,6 +15,7 @@ window.addEventListener("load",()=>{
   loadUser();
 });
 
+/* NAV */
 function showPage(id,el){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -21,6 +23,25 @@ function showPage(id,el){
   el.classList.add("active");
 }
 
+/* BALANCE ANIMATION */
+function animateBalance(newBalance){
+  const el = document.getElementById("balance");
+  let start = lastBalance;
+  let end = newBalance;
+  let duration = 500;
+  let startTime = null;
+
+  function animate(time){
+    if(!startTime) startTime = time;
+    let progress = Math.min((time-startTime)/duration,1);
+    el.innerText = Math.floor(start + (end-start)*progress);
+    if(progress < 1) requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+  lastBalance = newBalance;
+}
+
+/* LOAD USER */
 async function loadUser(){
   const user=tg.initDataUnsafe.user;
   telegramId=String(user.id);
@@ -33,22 +54,25 @@ async function loadUser(){
 
   const data=await res.json();
 
-  document.getElementById("balance").innerText=data.balance;
+  animateBalance(data.balance);
   document.getElementById("totalEarn").innerText=data.totalEarn;
   document.getElementById("todayAds").innerText=data.todayAds+"/35";
-  document.getElementById("progressFill").style.width=(data.todayAds/35*100)+"%";
 
-  document.getElementById("refLink").value=
+  document.getElementById("progressFill").style.width =
+    (data.todayAds/35*100)+"%";
+
+  document.getElementById("refLink").value =
     "https://t.me/your_bot?start="+telegramId;
 
   loadWithdrawHistory();
 }
 
+/* WATCH AD */
 async function watchAd(){
   if(cooldown) return;
 
   const btn=document.getElementById("adBtn");
-  const cd=document.getElementById("countdown");
+  const cd=document.getElementById("countdownText");
 
   try{
     await AdController.show();
@@ -78,22 +102,18 @@ async function watchAd(){
       }
     },1000);
 
-  }catch(e){
+  }catch{
     console.log("Ad closed");
   }
 }
 
-function copyRef(){
-  const input=document.getElementById("refLink");
-  input.select();
-  document.execCommand("copy");
-  alert("Copied!");
-}
-
+/* WITHDRAW */
 async function withdraw(){
   const method=document.getElementById("method").value;
   const number=document.getElementById("number").value;
   const amount=parseInt(document.getElementById("amount").value);
+
+  if(!amount || !number) return alert("Fill all fields");
 
   await fetch("/api/withdraw",{
     method:"POST",
@@ -101,10 +121,10 @@ async function withdraw(){
     body:JSON.stringify({telegramId,amount,method,number})
   });
 
-  alert("Withdraw request sent");
   loadWithdrawHistory();
 }
 
+/* WITHDRAW HISTORY */
 async function loadWithdrawHistory(){
   const res=await fetch("/api/user/withdraws/"+telegramId);
   const data=await res.json();
@@ -112,11 +132,29 @@ async function loadWithdrawHistory(){
   box.innerHTML="";
 
   data.forEach(w=>{
+    let statusClass="status-pending";
+    if(w.status==="approved") statusClass="status-approved";
+    if(w.status==="rejected") statusClass="status-rejected";
+
     box.innerHTML+=`
-      <div style="margin-bottom:10px;">
-        <b>৳ ${w.amount}</b> - ${w.status}
-        ${w.reason? `<div style="color:red;">Reason: ${w.reason}</div>`:""}
+      <div class="withdraw-item">
+        <strong>৳ ${w.amount}</strong>
+        <span class="status-badge ${statusClass}">
+          ${w.status.toUpperCase()}
+        </span>
+        <div style="font-size:12px;opacity:0.7;">
+          ${new Date(w.createdAt).toLocaleString()}
+        </div>
+        ${w.reason ? `<div class="reject-reason">Reason: ${w.reason}</div>`:""}
       </div>
     `;
   });
-        }
+}
+
+/* REF COPY */
+function copyRef(){
+  const input=document.getElementById("refLink");
+  input.select();
+  document.execCommand("copy");
+  alert("Referral link copied");
+}
