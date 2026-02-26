@@ -69,8 +69,10 @@ ${w.reason ? `<b style="color:red;">Reason:</b> ${w.reason}<br>` : ""}
 
 <br>
 
+${w.status==="pending" ? `
 <button onclick="approve('${w._id}')">Approve</button>
 <button onclick="reject('${w._id}')">Reject</button>
+` : ""}
 
 </div>
 `;
@@ -120,13 +122,17 @@ box.innerHTML="";
 data.forEach(u=>{
 
 box.innerHTML+=`
-<div class="card">
+<div class="card" style="${u.blocked ? 'border-left:5px solid red;' : ''}">
 <b>${u.username}</b> (${u.telegramId})<br>
 Balance: ৳ ${u.balance}<br>
-Blocked: ${u.blocked ? "YES" : "NO"}<br>
+Blocked: ${u.blocked ? "<span style='color:red;'>YES</span>" : "NO"}<br>
 
 <button onclick="editBalance('${u.telegramId}')">Edit Balance</button>
-<button onclick="blockUser('${u.telegramId}')">Block</button>
+
+${u.blocked
+? `<button onclick="unblockUser('${u.telegramId}')">Unblock</button>`
+: `<button onclick="blockUser('${u.telegramId}')">Block</button>`
+}
 
 </div>
 `;
@@ -165,8 +171,23 @@ alert("User blocked");
 loadUsers();
 }
 
+/* ================= UNBLOCK USER ================= */
+async function unblockUser(id){
+
+if(!confirm("Unblock this user?")) return;
+
+await fetch("/api/admin/unblock",{
+method:"POST",
+headers:{"Content-Type":"application/json",authorization:token},
+body:JSON.stringify({telegramId:id})
+});
+
+alert("User unblocked");
+loadUsers();
+}
+
 /* ================= COPY FUNCTION ================= */
 function copyText(text){
 navigator.clipboard.writeText(text);
 alert("Copied: "+text);
-}
+         }
