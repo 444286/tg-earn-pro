@@ -91,7 +91,7 @@ document.getElementById("progressFill").style.width =
 ((data.todayAds || 0)/35*100)+"%";
 
 document.getElementById("refLink").value =
-"https://t.me/your_bot?start="+telegramId;
+"https://t.me/loyalti_app_bot?start="+telegramId;
 
 loadWithdrawHistory();
 }
