@@ -63,7 +63,7 @@ const data = await res.json();
   if(!data) return;
   // 🔴 BLOCK CHECK
 if(data.blocked){
-  alert("Your account has been blocked by admin.");
+  alert("Suspicious activities detected....Please turn off VPN or Proxy connection and try again.");
 
   // Telegram Mini App হলে auto close
   if(window.Telegram && Telegram.WebApp){
@@ -153,8 +153,8 @@ return;
 }
 
 // 🔴 MINIMUM 50 CHECK
-if(amount < 50){
-alert("Minimum withdraw 50 টাকা");
+if(amount < 1000){
+alert("Minimum withdraw 1000 টাকা");
 return;
 }
 
