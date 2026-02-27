@@ -92,33 +92,69 @@ async function reject(id){
   loadStats();
 }
 
-/* ================= USERS ================= */
+/* ================= USERS (GROUPED BY DEVICE) ================= */
 async function loadUsers(){
-  const res=await fetch("/api/admin/users",{headers:{authorization:token}});
-  const data=await res.json();
-  const box=document.getElementById("userList");
+
+  const res = await fetch("/api/admin/users-grouped",{headers:{authorization:token}});
+  const data = await res.json();
+  const box = document.getElementById("userList");
   box.innerHTML="";
 
-  data.forEach(u=>{
-    box.innerHTML+=`
-    <div class="card">
-      <b>${u.username}</b> (${u.telegramId})<br>
-      Balance: ৳ ${u.balance}<br>
-      Blocked: ${u.blocked ? "YES" : "NO"}<br>
-      Multi Allowed: ${u.allowMulti ? "YES" : "NO"}<br>
+  Object.keys(data).forEach(deviceId=>{
 
-      <button onclick="editBalance('${u.telegramId}')">Edit Balance</button>
+    const users = data[deviceId];
 
-      ${u.blocked
-        ? `<button onclick="unblockUser('${u.telegramId}')">Unblock</button>`
-        : `<button onclick="blockUser('${u.telegramId}')">Block</button>`
-      }
+    const isMulti = users.length > 1;
 
-      ${!u.allowMulti
-        ? `<button onclick="allowMulti('${u.telegramId}')">Allow Multi</button>`
-        : ""
-      }
-    </div>
+    let userCards = "";
+
+    users.forEach(u=>{
+      userCards += `
+        <div style="
+          background:#f4f6fb;
+          padding:10px;
+          margin:6px;
+          border-radius:8px;
+          display:inline-block;
+          width:220px;
+          vertical-align:top;
+        ">
+          <b>${u.username || "NoName"}</b><br>
+          ID: ${u.telegramId}<br>
+          Balance: ৳ ${u.balance}<br>
+          Blocked: ${u.blocked ? "YES" : "NO"}<br>
+          Multi Allowed: ${u.allowMulti ? "YES" : "NO"}<br><br>
+
+          <button onclick="editBalance('${u.telegramId}')">Edit</button>
+
+          ${u.blocked
+            ? `<button onclick="unblockUser('${u.telegramId}')">Unblock</button>`
+            : `<button onclick="blockUser('${u.telegramId}')">Block</button>`
+          }
+
+          ${!u.allowMulti
+            ? `<button onclick="allowMulti('${u.telegramId}')">Allow Multi</button>`
+            : ""
+          }
+        </div>
+      `;
+    });
+
+    box.innerHTML += `
+      <div style="
+        border:2px solid ${isMulti ? 'red' : '#ddd'};
+        padding:15px;
+        margin-bottom:20px;
+        border-radius:10px;
+        background:#ffffff;
+      ">
+        <b>Device:</b> ${deviceId.substring(0,60)}<br>
+        <b>${users.length} Account(s)</b>
+
+        <div style="margin-top:10px;">
+          ${userCards}
+        </div>
+      </div>
     `;
   });
 }
@@ -165,4 +201,4 @@ async function allowMulti(id){
     body:JSON.stringify({telegramId:id})
   });
   loadUsers();
-           }
+}
