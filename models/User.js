@@ -18,8 +18,6 @@ const UserSchema = new mongoose.Schema({
   deviceId: String,
   ipAddress: String,
 
-  username: { type: String, default: "Unknown" },
-allowMulti: { type: Boolean, default: false }, // 🔥 NEW
   blocked: { type: Boolean, default: false },
 
   createdAt: { type: Date, default: Date.now }
