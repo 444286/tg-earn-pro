@@ -23,8 +23,7 @@ function todayDate(){
 /* ================= USER LOGIN ================= */
 app.post("/api/user", async (req,res)=>{
 
-  const { telegramId, username } = req.body;
-  const deviceId = req.headers["user-agent"];
+  const { telegramId, username, deviceId } = req.body;
   const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   if(!telegramId) return res.json({msg:"Invalid ID"});
@@ -40,7 +39,7 @@ app.post("/api/user", async (req,res)=>{
        return res.json({ deviceBlocked:true });
   }
 
-  // 🔐 ACCOUNT BLOCK CHECK
+  // 🔐 ACCOUNT BLOCK
   if(user && user.blocked){
     return res.json({ blocked:true });
   }
@@ -59,10 +58,9 @@ app.post("/api/user", async (req,res)=>{
       allowMulti:false,
       blocked:false
     });
-    await user.save();
   }
 
-  // 🔥 ALWAYS UPDATE DEVICE + IP
+  // 🔄 ALWAYS UPDATE DEVICE + IP
   user.deviceId = deviceId;
   user.ipAddress = ip;
   await user.save();
@@ -170,7 +168,7 @@ app.get("/api/admin/stats", verifyAdmin, async (req,res)=>{
   res.json({ totalUsers, totalPending });
 });
 
-/* ================= ADMIN USERS ================= */
+/* ================= ADMIN USERS (NORMAL LIST) ================= */
 app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
   const users = await User.find();
   res.json(users);
@@ -180,7 +178,6 @@ app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
 app.get("/api/admin/users-grouped", verifyAdmin, async (req,res)=>{
 
   const users = await User.find();
-
   const grouped = {};
 
   users.forEach(user=>{
