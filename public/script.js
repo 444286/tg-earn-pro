@@ -54,7 +54,6 @@ async function loadUser(){
   const tgUser = tg.initDataUnsafe.user;
   telegramId = String(tgUser.id);
 
-  // 🔐 REAL UNIQUE DEVICE ID
   let deviceId = localStorage.getItem("device_id");
 
   if(!deviceId){
@@ -103,98 +102,4 @@ async function loadUser(){
     "https://t.me/loyalti_app_bot?start="+telegramId;
 
   loadWithdrawHistory();
-}
-
-/* ================= WATCH AD ================= */
-async function watchAd(){
-  if(cooldown) return;
-
-  const btn=document.getElementById("adBtn");
-  const cd=document.getElementById("countdownText");
-
-  try{
-    await AdController.show();
-
-    const res = await fetch("/api/ad-complete",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId})
-    });
-
-    const data = await res.json();
-    if(data.success){
-      await loadUser();
-    }
-
-    cooldown=true;
-    btn.disabled=true;
-
-    let sec=30;
-    cd.innerText="পুনরায় "+sec+"s পরে";
-
-    const timer=setInterval(()=>{
-      sec--;
-      cd.innerText="পুনরায় "+sec+"s পরে";
-      if(sec<=0){
-        clearInterval(timer);
-        cooldown=false;
-        btn.disabled=false;
-        cd.innerText="";
-      }
-    },1000);
-
-  }catch{
-    console.log("Ad closed");
-  }
-}
-
-/* ================= WITHDRAW ================= */
-async function withdraw(){
-
-  const method = document.getElementById("method").value;
-  const number = document.getElementById("number").value.trim();
-  const amount = parseInt(document.getElementById("amount").value);
-
-  if(!amount || !number){
-    alert("সব ঘর পূরণ করুন");
-    return;
-  }
-
-  if(amount < 50){
-    alert("Minimum withdraw 50 টাকা");
-    return;
-  }
-
-  const btn = document.querySelector("#wallet button");
-  btn.disabled = true;
-  btn.innerText = "Processing...";
-
-  try{
-    const res = await fetch("/api/withdraw",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({telegramId,amount,method,number})
-    });
-
-    const data = await res.json();
-
-    if(data.success){
-      document.getElementById("number").value="";
-      document.getElementById("amount").value="";
-      await loadUser();
-      await loadWithdrawHistory();
-      btn.innerText="✅ Success";
-    }else{
-      alert(data.message || "Withdraw failed");
-      btn.innerText="❌ Failed";
-    }
-
-  }catch{
-    btn.innerText="❌ Failed";
-  }
-
-  setTimeout(()=>{
-    btn.innerText="Request Withdraw";
-    btn.disabled=false;
-  },2000);
 }
