@@ -27,28 +27,32 @@ app.post("/api/user", async (req,res)=>{
   const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   if(!telegramId) return res.json({msg:"Invalid ID"});
+  if(!deviceId) return res.json({msg:"No Device ID"});
 
   let user = await User.findOne({telegramId});
 
-  // 🔐 DEVICE LOCK CHECK
-  const existingDeviceUser = await User.findOne({ deviceId });
+  /* 🔐 DEVICE LOCK CHECK */
+  const sameDeviceUsers = await User.find({ deviceId });
 
-  if(existingDeviceUser &&
-     existingDeviceUser.telegramId !== telegramId &&
-     !existingDeviceUser.allowMulti){
-       return res.json({ deviceBlocked:true });
+  if(sameDeviceUsers.length > 0){
+
+    const owner = sameDeviceUsers[0];
+
+    if(owner.telegramId !== telegramId && !owner.allowMulti){
+      return res.json({ deviceBlocked:true });
+    }
   }
 
-  // 🔐 ACCOUNT BLOCK
+  /* 🔐 ACCOUNT BLOCK */
   if(user && user.blocked){
     return res.json({ blocked:true });
   }
 
-  // 🆕 CREATE USER
+  /* 🆕 CREATE USER */
   if(!user){
     user = new User({
       telegramId,
-      username,
+      username: username || "Unknown",
       balance:0,
       totalEarn:0,
       todayAds:0,
@@ -60,12 +64,14 @@ app.post("/api/user", async (req,res)=>{
     });
   }
 
-  // 🔄 ALWAYS UPDATE DEVICE + IP
+  /* 🔄 ALWAYS UPDATE DEVICE + IP */
   user.deviceId = deviceId;
   user.ipAddress = ip;
+  user.username = username || user.username || "Unknown";
+
   await user.save();
 
-  // 🔄 RESET DAILY ADS
+  /* 🔄 RESET DAILY ADS */
   if(user.lastAdDate !== todayDate()){
     user.todayAds = 0;
     user.lastAdDate = todayDate();
@@ -168,7 +174,7 @@ app.get("/api/admin/stats", verifyAdmin, async (req,res)=>{
   res.json({ totalUsers, totalPending });
 });
 
-/* ================= ADMIN USERS (NORMAL LIST) ================= */
+/* ================= ADMIN USERS ================= */
 app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
   const users = await User.find();
   res.json(users);
@@ -176,7 +182,6 @@ app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
 
 /* ================= ADMIN USERS GROUPED BY DEVICE ================= */
 app.get("/api/admin/users-grouped", verifyAdmin, async (req,res)=>{
-
   const users = await User.find();
   const grouped = {};
 
