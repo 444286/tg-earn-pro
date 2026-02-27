@@ -176,6 +176,26 @@ app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
   res.json(users);
 });
 
+/* ================= ADMIN USERS GROUPED BY DEVICE ================= */
+app.get("/api/admin/users-grouped", verifyAdmin, async (req,res)=>{
+
+  const users = await User.find();
+
+  const grouped = {};
+
+  users.forEach(user=>{
+    const key = user.deviceId || "unknown";
+
+    if(!grouped[key]){
+      grouped[key] = [];
+    }
+
+    grouped[key].push(user);
+  });
+
+  res.json(grouped);
+});
+
 /* ================= ADMIN WITHDRAWS ================= */
 app.get("/api/admin/withdraws", verifyAdmin, async (req,res)=>{
   const data = await Withdraw.find().sort({createdAt:-1});
