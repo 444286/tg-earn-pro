@@ -24,14 +24,28 @@ function todayDate(){
 app.post("/api/user", async (req,res)=>{
 
   const { telegramId, username } = req.body;
+  const deviceId = req.headers["user-agent"];
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
   if(!telegramId) return res.json({msg:"Invalid ID"});
 
   let user = await User.findOne({telegramId});
 
+  // 🔐 DEVICE LOCK CHECK
+  const existingDeviceUser = await User.findOne({ deviceId });
+
+  if(existingDeviceUser &&
+     existingDeviceUser.telegramId !== telegramId &&
+     !existingDeviceUser.allowMulti){
+       return res.json({ deviceBlocked:true });
+  }
+
+  // 🔐 ACCOUNT BLOCK CHECK
   if(user && user.blocked){
     return res.json({ blocked:true });
   }
 
+  // 🆕 CREATE USER
   if(!user){
     user = new User({
       telegramId,
@@ -40,11 +54,20 @@ app.post("/api/user", async (req,res)=>{
       totalEarn:0,
       todayAds:0,
       lastAdDate:todayDate(),
+      deviceId,
+      ipAddress:ip,
+      allowMulti:false,
       blocked:false
     });
     await user.save();
   }
 
+  // 🔥 ALWAYS UPDATE DEVICE + IP
+  user.deviceId = deviceId;
+  user.ipAddress = ip;
+  await user.save();
+
+  // 🔄 RESET DAILY ADS
   if(user.lastAdDate !== todayDate()){
     user.todayAds = 0;
     user.lastAdDate = todayDate();
@@ -61,13 +84,8 @@ app.post("/api/ad-complete", async (req,res)=>{
   const user = await User.findOne({telegramId});
   if(!user) return res.json({msg:"User not found"});
 
-  if(user.blocked){
-    return res.json({blocked:true});
-  }
-
-  if(user.todayAds >= 35){
-    return res.json({msg:"Daily limit reached"});
-  }
+  if(user.blocked) return res.json({blocked:true});
+  if(user.todayAds >= 35) return res.json({msg:"Daily limit reached"});
 
   user.balance += 10;
   user.totalEarn += 10;
@@ -84,17 +102,9 @@ app.post("/api/withdraw", async (req,res)=>{
   const user = await User.findOne({telegramId});
   if(!user) return res.json({success:false});
 
-  if(user.blocked){
-    return res.json({blocked:true});
-  }
-
-  if(amount < 50){
-    return res.json({success:false, message:"Minimum 50"});
-  }
-
-  if(user.balance < amount){
-    return res.json({success:false, message:"Insufficient balance"});
-  }
+  if(user.blocked) return res.json({blocked:true});
+  if(amount < 50) return res.json({success:false,message:"Minimum 50"});
+  if(user.balance < amount) return res.json({success:false,message:"Insufficient balance"});
 
   user.balance -= amount;
   await user.save();
@@ -142,7 +152,6 @@ app.post("/api/admin/login",(req,res)=>{
 
 /* ================= ADMIN MIDDLEWARE ================= */
 function verifyAdmin(req,res,next){
-
   const token = req.headers.authorization;
   if(!token) return res.status(403).json({msg:"No token"});
 
@@ -204,6 +213,7 @@ app.post("/api/admin/edit-balance", verifyAdmin, async (req,res)=>{
   const { telegramId, amount } = req.body;
   const user = await User.findOne({telegramId});
   if(!user) return res.json({success:false});
+
   user.balance = amount;
   await user.save();
   res.json({ success:true });
@@ -223,9 +233,11 @@ app.post("/api/admin/unblock", verifyAdmin, async (req,res)=>{
   res.json({ success:true });
 });
 
-app.get("/",(req,res)=>{
-  res.send("Server running");
+/* ================= ALLOW MULTI ================= */
+app.post("/api/admin/allow-multi", verifyAdmin, async (req,res)=>{
+  const { telegramId } = req.body;
+  await User.findOneAndUpdate({ telegramId },{ allowMulti:true });
+  res.json({ success:true });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>console.log("Server running"));
+app.listen(process.env.PORT || 5000,()=>console.log("Server running"));
