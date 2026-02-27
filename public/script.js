@@ -54,24 +54,34 @@ async function loadUser(){
   const tgUser = tg.initDataUnsafe.user;
   telegramId = String(tgUser.id);
 
+  // 🔐 REAL UNIQUE DEVICE ID
+  let deviceId = localStorage.getItem("device_id");
+
+  if(!deviceId){
+    deviceId = crypto.randomUUID();
+    localStorage.setItem("device_id", deviceId);
+  }
+
   const res = await fetch("/api/user",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ telegramId, username:tgUser.first_name })
+    body:JSON.stringify({
+      telegramId,
+      username: tgUser.first_name,
+      deviceId
+    })
   });
 
   const data = await res.json();
 
-  // 🔐 DEVICE BLOCK
   if(data.deviceBlocked){
     alert("This device already used by another account.");
     Telegram.WebApp.close();
     return;
   }
 
-  // 🔐 ACCOUNT BLOCK
   if(data.blocked){
-    alert("Your account has been blocked by admin.");
+    alert("Your account has been blocked.");
     Telegram.WebApp.close();
     return;
   }
@@ -187,47 +197,4 @@ async function withdraw(){
     btn.innerText="Request Withdraw";
     btn.disabled=false;
   },2000);
-}
-
-/* ================= WITHDRAW HISTORY ================= */
-async function loadWithdrawHistory(){
-  const box=document.getElementById("withdrawHistory");
-  if(!telegramId) return;
-
-  const res=await fetch("/api/user/withdraws/"+telegramId);
-  const data=await res.json();
-
-  box.innerHTML="";
-
-  if(!data || data.length===0){
-    box.innerHTML="<p style='opacity:0.6'>No Withdraw Yet</p>";
-    return;
-  }
-
-  data.forEach(w=>{
-    let statusClass="status-pending";
-    if(w.status==="approved") statusClass="status-approved";
-    if(w.status==="rejected") statusClass="status-rejected";
-
-    box.innerHTML+=`
-    <div class="withdraw-item">
-      <strong>৳ ${w.amount}</strong>
-      <span class="status-badge ${statusClass}">
-        ${w.status.toUpperCase()}
-      </span>
-      <div style="font-size:12px;opacity:0.7;">
-        ${new Date(w.createdAt).toLocaleString()}
-      </div>
-      ${w.reason ? `<div class="reject-reason">Reason: ${w.reason}</div>`:""}
-    </div>
-    `;
-  });
-}
-
-/* ================= REF COPY ================= */
-function copyRef(){
-  const input=document.getElementById("refLink");
-  input.select();
-  document.execCommand("copy");
-  alert("Referral link copied");
 }
