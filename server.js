@@ -183,6 +183,20 @@ app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
   res.json(users);
 });
 
+/* ================= DELETE USER ================= */
+app.post("/api/admin/delete-user", verifyAdmin, async (req,res)=>{
+
+  const { telegramId } = req.body;
+
+  // Delete user
+  await User.deleteOne({ telegramId });
+
+  // Delete withdraw history
+  await Withdraw.deleteMany({ telegramId });
+
+  res.json({ success:true });
+
+});
 /* ================= ADMIN WITHDRAWS ================= */
 app.get("/api/admin/withdraws", verifyAdmin, async (req,res)=>{
 
