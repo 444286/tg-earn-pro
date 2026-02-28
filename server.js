@@ -26,17 +26,15 @@ app.post("/api/user", async (req,res)=>{
 
   const { telegramId, username } = req.body;
 
-  if(!telegramId) 
+  if(!telegramId)
     return res.json({msg:"Invalid ID"});
 
   let user = await User.findOne({telegramId});
 
-  // 🔴 যদি blocked হয়
   if(user && user.blocked){
     return res.json({ blocked:true });
   }
 
-  // 🆕 নতুন user create
   if(!user){
     user = new User({
       telegramId,
@@ -45,14 +43,13 @@ app.post("/api/user", async (req,res)=>{
       totalEarn:0,
       todayAds:0,
       lastAdDate:todayDate(),
+      joinedChannels: [], // ✅ added
       blocked:false
     });
   }else{
-    // ✅ IMPORTANT FIX (undefined fix)
     user.username = username || user.username || "No Name";
   }
 
-  // 🔄 daily reset
   if(user.lastAdDate !== todayDate()){
     user.todayAds = 0;
     user.lastAdDate = todayDate();
@@ -69,7 +66,7 @@ app.post("/api/ad-complete", async (req,res)=>{
   const { telegramId } = req.body;
   const user = await User.findOne({telegramId});
 
-  if(!user) 
+  if(!user)
     return res.json({msg:"User not found"});
 
   if(user.blocked)
@@ -123,7 +120,6 @@ app.post("/api/withdraw", async (req,res)=>{
 
 /* ================= WITHDRAW HISTORY ================= */
 app.get("/api/user/withdraws/:telegramId", async (req,res)=>{
-
   const data = await Withdraw.find({
     telegramId:req.params.telegramId
   }).sort({createdAt:-1});
@@ -131,7 +127,7 @@ app.get("/api/user/withdraws/:telegramId", async (req,res)=>{
   res.json(data);
 });
 
-/*===≠=============Join api chek===========*/
+/* ================= TELEGRAM JOIN CHECK ================= */
 app.post("/api/check-join", async (req,res)=>{
 
   const { telegramId, channel, reward } = req.body;
@@ -144,16 +140,22 @@ app.post("/api/check-join", async (req,res)=>{
 
     const data = await response.json();
 
-    if(!data.result) return res.json({success:false});
+    if(!data.result)
+      return res.json({success:false});
 
     const status = data.result.status;
 
     if(status==="member" || status==="administrator" || status==="creator"){
 
       const user = await User.findOne({telegramId});
-      if(!user) return res.json({success:false});
+      if(!user)
+        return res.json({success:false});
 
-      // 🔐 duplicate check
+      // ✅ ensure array exists
+      if(!user.joinedChannels){
+        user.joinedChannels = [];
+      }
+
       if(user.joinedChannels.includes(channel)){
         return res.json({success:false, message:"Already claimed"});
       }
@@ -170,11 +172,11 @@ app.post("/api/check-join", async (req,res)=>{
     res.json({success:false});
 
   }catch(err){
+    console.log(err);
     res.json({success:false});
   }
 
 });
-
 
 /* ================= ADMIN LOGIN ================= */
 app.post("/api/admin/login",(req,res)=>{
@@ -223,7 +225,6 @@ app.get("/api/admin/stats", verifyAdmin, async (req,res)=>{
 
 /* ================= ADMIN USERS ================= */
 app.get("/api/admin/users", verifyAdmin, async (req,res)=>{
-
   const users = await User.find();
   res.json(users);
 });
@@ -233,25 +234,21 @@ app.post("/api/admin/delete-user", verifyAdmin, async (req,res)=>{
 
   const { telegramId } = req.body;
 
-  // Delete user
   await User.deleteOne({ telegramId });
-
-  // Delete withdraw history
   await Withdraw.deleteMany({ telegramId });
 
   res.json({ success:true });
 
 });
+
 /* ================= ADMIN WITHDRAWS ================= */
 app.get("/api/admin/withdraws", verifyAdmin, async (req,res)=>{
-
   const data = await Withdraw.find().sort({createdAt:-1});
   res.json(data);
 });
 
 /* ================= APPROVE ================= */
 app.post("/api/admin/approve", verifyAdmin, async (req,res)=>{
-
   const { id } = req.body;
 
   await Withdraw.findByIdAndUpdate(id,{
@@ -298,7 +295,6 @@ app.post("/api/admin/edit-balance", verifyAdmin, async (req,res)=>{
 
 /* ================= BLOCK USER ================= */
 app.post("/api/admin/block", verifyAdmin, async (req,res)=>{
-
   const { telegramId } = req.body;
 
   await User.findOneAndUpdate(
@@ -311,7 +307,6 @@ app.post("/api/admin/block", verifyAdmin, async (req,res)=>{
 
 /* ================= UNBLOCK USER ================= */
 app.post("/api/admin/unblock", verifyAdmin, async (req,res)=>{
-
   const { telegramId } = req.body;
 
   await User.findOneAndUpdate(
