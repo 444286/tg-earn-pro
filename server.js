@@ -88,8 +88,8 @@ app.post("/api/withdraw", async (req,res)=>{
     return res.json({blocked:true});
   }
 
-  if(amount < 50){
-    return res.json({success:false, message:"Minimum 50"});
+  if(amount < 500){
+    return res.json({success:false, message:"Minimum 500"});
   }
 
   if(user.balance < amount){
