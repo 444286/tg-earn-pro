@@ -131,6 +131,51 @@ app.get("/api/user/withdraws/:telegramId", async (req,res)=>{
   res.json(data);
 });
 
+/*===≠=============Join api chek===========*/
+app.post("/api/check-join", async (req,res)=>{
+
+  const { telegramId, channel, reward } = req.body;
+
+  try{
+
+    const response = await fetch(
+      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getChatMember?chat_id=@${channel}&user_id=${telegramId}`
+    );
+
+    const data = await response.json();
+
+    if(!data.result) return res.json({success:false});
+
+    const status = data.result.status;
+
+    if(status==="member" || status==="administrator" || status==="creator"){
+
+      const user = await User.findOne({telegramId});
+      if(!user) return res.json({success:false});
+
+      // 🔐 duplicate check
+      if(user.joinedChannels.includes(channel)){
+        return res.json({success:false, message:"Already claimed"});
+      }
+
+      user.balance += reward;
+      user.totalEarn += reward;
+      user.joinedChannels.push(channel);
+
+      await user.save();
+
+      return res.json({success:true});
+    }
+
+    res.json({success:false});
+
+  }catch(err){
+    res.json({success:false});
+  }
+
+});
+
+
 /* ================= ADMIN LOGIN ================= */
 app.post("/api/admin/login",(req,res)=>{
 
