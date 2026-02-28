@@ -63,7 +63,7 @@ const data = await res.json();
   if(!data) return;
   // 🔴 BLOCK CHECK
 if(data.blocked){
-  alert("No Internet...");
+  alert("No internet connection...");
 
   // Telegram Mini App হলে auto close
   if(window.Telegram && Telegram.WebApp){
