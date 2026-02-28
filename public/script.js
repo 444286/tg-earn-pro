@@ -63,7 +63,7 @@ const data = await res.json();
   if(!data) return;
   // 🔴 BLOCK CHECK
 if(data.blocked){
-  alert("Suspicious activities detected....Please turn off VPN or Proxy connection and try again.");
+  alert("No Internet...");
 
   // Telegram Mini App হলে auto close
   if(window.Telegram && Telegram.WebApp){
