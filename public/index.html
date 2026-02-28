@@ -28,46 +28,35 @@
 <div class="balance-card">
 <h4>TOTAL BALANCE</h4>
 <h1><span id="balance">0</span> টাকা</h1>
+
+<div class="balance-row">
+<div>
+<strong id="totalEarn">0</strong>
+<p>Earned</p>
+</div>
+<div>
+<strong id="todayAds">0/35</strong>
+<p>Today Ads</p>
+</div>
+</div>
 </div>
 
 <div class="big-ad-card">
 <div class="megaphone">📢</div>
 <h2>বিজ্ঞাপন দেখুন</h2>
+<p>প্রতি বিজ্ঞাপন দেখে ১০ টাকা আয় করুন। আপনার দেখা প্রতিটি এড থেকে সামান্যই টাকা পেয়ে থাকি আমরা।তাই অন্যান্য ফেক সাইটের মতো লোভ দেখানো এমাউন্ট আমরা দেখাইনা। তাই অল্প এমাউন্ট হলেও ১০০% সততার সহিত পেমেন্ট করবো আমরা।।</p>
+
+<div class="reward-badge">🎁 রিওয়ার্ড: ১০ টাকা। এড পুরোপুরি শেষ হয়ে নিজেই বন্ধ না হওয়া পর্যন্ত বের হবেন না। অন্যথায় পরবর্তীতে পেমেন্ট আটকে যাবে।</div>
+  <div class="reward-badge">সতর্কতাঃ একই ফোন বা ডিভাইস থেকে একের অধিক আইডি দিয়ে কাজ করলে একাউন্ট ব্যান বা পেমেন্ট রিজেক্ট হবে।</div>
+
+<div class="progress-bar">
+<div id="progressFill"></div>
+</div>
+
 <button id="adBtn" onclick="watchAd()">বিজ্ঞাপন দেখুন</button>
+<div id="countdownText"></div>
 </div>
 
-<!-- ============= TG TASK LIST ============= -->
-<div class="task-list">
-
-<div class="task-card">
-<div class="task-left">
-<div class="icon telegram">📨</div>
-<div>
-<div class="task-title">Official Channel</div>
-<div class="task-reward">+10 টাকা</div>
-</div>
-</div>
-<button class="task-btn"
-onclick="handleTGTask(this,'zomato_app_official_channel',10)">
-Join
-</button>
-</div>
-
-<div class="task-card">
-<div class="task-left">
-<div class="icon telegram">📨</div>
-<div>
-<div class="task-title">Payment Proof</div>
-<div class="task-reward">+8 টাকা</div>
-</div>
-</div>
-<button class="task-btn"
-onclick="handleTGTask(this,'zomato_app_payment_proof',8)">
-Join
-</button>
-</div>
-
-</div>
 </div>
 
 <!-- ================= SUPPORT ================= -->
@@ -78,12 +67,46 @@ Join
 </div>
 </div>
 
+<!-- ================= REFERRAL ================= -->
+<div id="referral" class="page">
+<div class="card">
+<h3>Referral</h3>
+<input id="refLink" readonly>
+<button onclick="copyRef()">Copy</button>
+</div>
+</div>
+
 <!-- ================= WALLET ================= -->
 <div id="wallet" class="page">
+
+<!-- BALANCE CARD -->
 <div class="balance-card">
 <h4>TOTAL BALANCE</h4>
 <h1><span id="balanceWithdraw">0</span> টাকা</h1>
 </div>
+
+<!-- WITHDRAW CARD -->
+<div class="card">
+<h3>Withdraw</h3>
+
+<select id="method">
+<option>Bkash </option>
+<option>Nagad</option>
+  <option>Binance</option>
+</select>
+
+<input id="number" placeholder="Account Number">
+<input id="amount" placeholder="Amount">
+
+<button onclick="withdraw()">Request Withdraw</button>
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+<h3>Withdraw History</h3>
+<div id="withdrawHistory"></div>
+</div>
+
 </div>
 
 </div>
@@ -91,21 +114,26 @@ Join
 <!-- ================= NAV ================= -->
 <div class="bottom-nav">
 <div class="nav active" onclick="showPage('home',this)">
-<i>🏠</i>
+<div class="icon">🏠</div>
 <span>হোম</span>
 </div>
 
 <div class="nav" onclick="showPage('support',this)">
-<i>🎧</i>
+<div class="icon">🎧</div>
 <span>সাপোর্ট</span>
 </div>
 
+<div class="nav" onclick="showPage('referral',this)">
+<div class="icon">👥</div>
+<span>রেফার</span>
+</div>
+
 <div class="nav" onclick="showPage('wallet',this)">
-<i>💳</i>
+<div class="icon">💳</div>
 <span>ওয়ালেট</span>
 </div>
 </div>
 
 <script src="script.js"></script>
 </body>
-</html>
+  </html>
