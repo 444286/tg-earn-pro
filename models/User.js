@@ -47,6 +47,10 @@ const UserSchema = new mongoose.Schema({
     default: false 
   },
 
+joinedChannels: {
+  type: [String],
+  default: []
+},
   createdAt: { 
     type: Date, 
     default: Date.now 
