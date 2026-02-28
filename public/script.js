@@ -153,8 +153,8 @@ return;
 }
 
 // 🔴 MINIMUM 50 CHECK
-if(amount < 1000){
-alert("Minimum withdraw 1000 টাকা");
+if(amount < 500){
+alert("Minimum withdraw 500 টাকা");
 return;
 }
 
