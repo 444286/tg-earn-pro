@@ -139,6 +139,33 @@ async function watchAd() {
   }
 }
 
+
+*/=================join chek==========*/
+function joinTG(channel){
+  Telegram.WebApp.openTelegramLink("https://t.me/"+channel);
+}
+
+async function checkJoin(channel,reward){
+
+  const res = await fetch("/api/check-join",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      telegramId,
+      channel,
+      reward
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.success){
+    alert("Reward added!");
+    loadUser();
+  }else{
+    alert(data.message || "Join first!");
+  }
+}
 /* ================= WITHDRAW ================= */
 async function withdraw() {
 
