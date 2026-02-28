@@ -1,5 +1,6 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
+tg.ready();
 
 let telegramId;
 let AdController;
@@ -68,14 +69,8 @@ async function loadUser() {
   if (!data) return;
 
   if (data.blocked) {
-    alert("Suspicious activities detected....Please turn off VPN or Proxy connection and try again.");
-
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.close();
-    } else {
-      document.body.innerHTML =
-        "<h2 style='text-align:center;margin-top:50px;'>Account Blocked</h2>";
-    }
+    alert("Account Blocked");
+    Telegram.WebApp.close();
     return;
   }
 
@@ -86,14 +81,16 @@ async function loadUser() {
 
   animateBalance(data.balance || 0);
 
-  document.getElementById("totalEarn").innerText = data.totalEarn || 0;
-  document.getElementById("todayAds").innerText = (data.todayAds || 0) + "/35";
+  if (document.getElementById("totalEarn"))
+    document.getElementById("totalEarn").innerText = data.totalEarn || 0;
 
-  document.getElementById("progressFill").style.width =
-    ((data.todayAds || 0) / 35) * 100 + "%";
+  if (document.getElementById("todayAds"))
+    document.getElementById("todayAds").innerText =
+      (data.todayAds || 0) + "/35";
 
-  document.getElementById("refLink").value =
-    "https://t.me/loyalti_app_bot?start=" + telegramId;
+  if (document.getElementById("progressFill"))
+    document.getElementById("progressFill").style.width =
+      ((data.todayAds || 0) / 35) * 100 + "%";
 
   loadWithdrawHistory();
 }
@@ -139,33 +136,59 @@ async function watchAd() {
   }
 }
 
+/* ================= TG TASK AUTO CHECK ================= */
+async function handleTGTask(button, channel, reward) {
 
-*/=================join chek==========*/
-function joinTG(channel){
-  Telegram.WebApp.openTelegramLink("https://t.me/"+channel);
-}
+  const key = "joined_" + channel;
+  const last = localStorage.getItem(key);
 
-async function checkJoin(channel,reward){
-
-  const res = await fetch("/api/check-join",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      telegramId,
-      channel,
-      reward
-    })
-  });
-
-  const data = await res.json();
-
-  if(data.success){
-    alert("Reward added!");
-    loadUser();
-  }else{
-    alert(data.message || "Join first!");
+  // 24 hour disable check
+  if (last && Date.now() - parseInt(last) < 86400000) {
+    button.innerText = "Completed";
+    button.disabled = true;
+    return;
   }
+
+  // Open channel
+  Telegram.WebApp.openTelegramLink("https://t.me/" + channel);
+
+  // Wait 4 seconds then check
+  setTimeout(async () => {
+
+    button.innerText = "Checking...";
+    button.disabled = true;
+
+    try {
+      const res = await fetch("/api/check-join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          telegramId,
+          channel,
+          reward
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        button.innerText = "Completed";
+        localStorage.setItem(key, Date.now());
+        loadUser();
+      } else {
+        button.innerText = "Join";
+        button.disabled = false;
+        alert("Join channel first!");
+      }
+
+    } catch {
+      button.innerText = "Join";
+      button.disabled = false;
+    }
+
+  }, 4000);
 }
+
 /* ================= WITHDRAW ================= */
 async function withdraw() {
 
@@ -200,10 +223,7 @@ async function withdraw() {
     if (data.success) {
       document.getElementById("number").value = "";
       document.getElementById("amount").value = "";
-
       await loadUser();
-      await loadWithdrawHistory();
-
       btn.innerText = "✅ Success";
     } else {
       alert(data.message || "Withdraw failed");
@@ -223,7 +243,7 @@ async function withdraw() {
 /* ================= WITHDRAW HISTORY ================= */
 async function loadWithdrawHistory() {
   const box = document.getElementById("withdrawHistory");
-  if (!telegramId) return;
+  if (!box || !telegramId) return;
 
   const res = await fetch("/api/user/withdraws/" + telegramId);
   const data = await res.json();
@@ -236,28 +256,39 @@ async function loadWithdrawHistory() {
   }
 
   data.forEach(w => {
-    let statusClass = "status-pending";
-    if (w.status === "approved") statusClass = "status-approved";
-    if (w.status === "rejected") statusClass = "status-rejected";
-
     box.innerHTML += `
     <div class="withdraw-item">
       <strong>৳ ${w.amount}</strong>
-      <span class="status-badge ${statusClass}">
-        ${w.status.toUpperCase()}
-      </span>
-      <div style="font-size:12px;opacity:0.7;">
-        ${new Date(w.createdAt).toLocaleString()}
-      </div>
-      ${w.reason ? `<div class="reject-reason">Reason: ${w.reason}</div>` : ""}
+      <span>${w.status.toUpperCase()}</span>
     </div>`;
   });
 }
 
 /* ================= REF COPY ================= */
 function copyRef() {
+
   const input = document.getElementById("refLink");
+
+  if (!input) return;
+
+  // Modern method
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(input.value)
+      .then(() => {
+        alert("Referral link copied!");
+      })
+      .catch(() => {
+        fallbackCopy(input);
+      });
+  } else {
+    fallbackCopy(input);
+  }
+}
+
+/* Fallback */
+function fallbackCopy(input) {
   input.select();
+  input.setSelectionRange(0, 99999);
   document.execCommand("copy");
-  alert("Referral link copied");
+  alert("Referral link copied!");
 }
