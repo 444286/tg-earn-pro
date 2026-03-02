@@ -44,11 +44,9 @@
 <div class="big-ad-card">
 <div class="megaphone">📢</div>
 <h2>বিজ্ঞাপন দেখুন</h2>
-<p>প্রতি বিজ্ঞাপন দেখে ১০ টাকা আয় করুন। আপনার দেখা প্রতিটি এড থেকে সামান্যই টাকা পেয়ে থাকি আমরা।তাই অন্যান্য ফেক সাইটের মতো লোভ দেখানো এমাউন্ট আমরা দেখাইনা। তাই অল্প এমাউন্ট হলেও ১০০% সততার সহিত পেমেন্ট করবো আমরা।।</p>
+<p>প্রতি বিজ্ঞাপন দেখে ১০ টাকা আয় করুন...</p>
 
-<div class="reward-badge">🎁 কাজের নিয়মঃ </div>
-<div class="reward-badge"> 1. এড পুরোপুরি শেষ হয়ে নিজেই বন্ধ না হওয়া পর্যন্ত বের হবেন না। অন্যথায় পরবর্তীতে পেমেন্ট আটকে যাবে।<br>2. একসাথে পর পর ৩৫টি এড দেখে শেষ করবেন না। সময় ভাগ করে সকালে, দুপুরে, বিকেলে, রাতে ৮-৯টি করে করে দেখবেন। <br>3.সব এডে নিচে Play now বা Go এমন বাটন আসবে। মাঝে মাঝে কিছু(৫-৬টির মতো)এডে এই বাটনে ক্লিক করে ২-১সেকেন্ড অপেক্ষা করে ব্যাক চলে আসবেন।
-  <div class="reward-badge">সতর্কতাঃ একই ফোন বা ডিভাইস থেকে একের অধিক আইডি দিয়ে কাজ করলে একাউন্ট ব্যান বা পেমেন্ট রিজেক্ট হবে।</div>
+<div class="reward-badge">🎁 কাজের নিয়মঃ</div>
 
 <div class="progress-bar">
 <div id="progressFill"></div>
@@ -58,28 +56,34 @@
 <div id="countdownText"></div>
 </div>
 
+<!-- 🔥 TASK SECTION (HOME এর ভিতরে) -->
+
 <div class="task-card">
-  <span>Join Official Channel  (+10)</span>
-  <button id="task1Btn" onclick="startTask('task1','https://t.me/zomato_app_official_channel')">
-    Start
-  </button>
+<span>Join Official Channel (+10)</span>
+<button id="task1Btn"
+onclick="startTask('task1','https://t.me/zomato_app_official_channel')">
+Start
+</button>
 </div>
 
 <div class="task-card">
-  <span>Join Channel 2 (+15)</span>
-  <button id="task2Btn" onclick="startTask('task2','https://t.me/zomato_app_payment_proof')">
-    Start
-  </button>
+<span>Join Channel 2 (+15)</span>
+<button id="task2Btn"
+onclick="startTask('task2','https://t.me/zomato_app_payment_proof')">
+Start
+</button>
 </div>
 
 <div class="task-card">
-  <span>Join Channel 3 (+20)</span>
-  <button id="task3Btn" onclick="startTask('task3','https://t.me/loyalti_app_bot')">
-    Start
-  </button>
-  </div>
-
+<span>Join Channel 3 (+20)</span>
+<button id="task3Btn"
+onclick="startTask('task3','https://t.me/loyalti_app_bot')">
+Start
+</button>
 </div>
+
+</div> <!-- ✅ HOME CLOSE -->
+
 <!-- ================= SUPPORT ================= -->
 <div id="support" class="page">
 <div class="card">
@@ -100,20 +104,18 @@
 <!-- ================= WALLET ================= -->
 <div id="wallet" class="page">
 
-<!-- BALANCE CARD -->
 <div class="balance-card">
 <h4>TOTAL BALANCE</h4>
 <h1><span id="balanceWithdraw">0</span> টাকা</h1>
 </div>
 
-<!-- WITHDRAW CARD -->
 <div class="card">
 <h3>Withdraw</h3>
 
 <select id="method">
-<option>Bkash </option>
+<option>Bkash</option>
 <option>Nagad</option>
-  <option>Binance</option>
+<option>Binance</option>
 </select>
 
 <input id="number" placeholder="Account Number">
@@ -122,7 +124,6 @@
 <button onclick="withdraw()">Request Withdraw</button>
 </div>
 
-<!-- HISTORY -->
 <div class="card">
 <h3>Withdraw History</h3>
 <div id="withdrawHistory"></div>
