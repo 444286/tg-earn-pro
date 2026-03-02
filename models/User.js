@@ -18,6 +18,12 @@ const UserSchema = new mongoose.Schema({
   deviceId: String,
   ipAddress: String,
 
+  // ✅ NEW FIELD
+  completedTasks: {
+    type: [String],
+    default: []
+  },
+
   blocked: { type: Boolean, default: false },
 
   createdAt: { type: Date, default: Date.now }
