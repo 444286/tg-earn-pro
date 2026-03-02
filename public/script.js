@@ -60,22 +60,14 @@ body:JSON.stringify({ telegramId })
 });
 
 const data = await res.json();
-  if(!data) return;
-  // 🔴 BLOCK CHECK
+if(!data) return;
+
+/* BLOCK CHECK */
 if(data.blocked){
-  alert("No internet connection...");
-
-  // Telegram Mini App হলে auto close
-  if(window.Telegram && Telegram.WebApp){
-    Telegram.WebApp.close();
-  }else{
-    // Browser হলে blank করে দাও
-    document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>Account Blocked</h2>";
-  }
-
+  alert("Account Blocked");
+  Telegram.WebApp.close();
   return;
-  }
-
+}
 
 document.getElementById("username").innerText = tgUser.first_name;
 document.getElementById("userid").innerText = telegramId;
@@ -92,6 +84,21 @@ document.getElementById("progressFill").style.width =
 
 document.getElementById("refLink").value =
 "https://t.me/loyalti_app_bot?start="+telegramId;
+
+/* 🔥 AUTO DETECT COMPLETED TASKS */
+if(data.completedTasks){
+
+["task1","task2","task3"].forEach(task=>{
+if(data.completedTasks.includes(task)){
+const btn = document.getElementById(task+"Btn");
+if(btn){
+btn.innerText = "Completed";
+btn.classList.add("completed");
+btn.disabled = true;
+}
+}
+});
+}
 
 loadWithdrawHistory();
 }
@@ -114,7 +121,6 @@ body:JSON.stringify({telegramId})
 
 const data = await res.json();
 
-// ✅ LIMIT HANDLE
 if(data.limit){
 alert("Daily 35 ads limit reached!");
 btn.disabled=true;
@@ -148,7 +154,6 @@ console.log("Ad closed");
 }
 
 /* WITHDRAW */
-
 async function withdraw(){
 
 const method = document.getElementById("method").value;
@@ -160,7 +165,6 @@ alert("সব ঘর পূরণ করুন");
 return;
 }
 
-// 🔴 MINIMUM 50 CHECK
 if(amount < 500){
 alert("Minimum withdraw 500 টাকা");
 return;
@@ -172,26 +176,17 @@ btn.innerText = "Processing...";
 
 try{
 
-const res = await fetch("/api/withdraw",{
+await fetch("/api/withdraw",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({telegramId,amount,method,number})
 });
 
-// 🔥 Backend response না দেখেও refresh করবো
 await loadUser();
 await loadWithdrawHistory();
 
-// 🔥 FIELD CLEAR FIX
 document.getElementById("number").value="";
 document.getElementById("amount").value="";
-
-// 🔥 FORCE BALANCE UPDATE
-let currentBalance = parseInt(document.getElementById("balance").innerText);
-let newBalance = currentBalance - amount;
-if(newBalance >= 0){
-animateBalance(newBalance);
-}
 
 btn.innerText = "✅ Success";
 
@@ -200,15 +195,14 @@ btn.innerText = "Request Withdraw";
 btn.disabled = false;
 },2000);
 
-}catch(err){
+}catch{
 btn.innerText = "❌ Failed";
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
 },2000);
 }
-
-  }
+}
 
 /* WITHDRAW HISTORY */
 async function loadWithdrawHistory(){
@@ -251,41 +245,44 @@ const input=document.getElementById("refLink");
 input.select();
 document.execCommand("copy");
 alert("Referral link copied");
-  }
+}
+
+/* ================= TASK SYSTEM ================= */
+
 function startTask(taskId, link){
 
-  const btn = document.getElementById(taskId+"Btn");
+const btn = document.getElementById(taskId+"Btn");
 
-  window.open(link,"_blank");
+window.open(link,"_blank");
 
-  btn.innerText = "Checking...";
-  btn.disabled = true;
+btn.innerText = "Checking...";
+btn.disabled = true;
 
-  setTimeout(()=>{
-    checkTask(taskId);
-  },5000);
+setTimeout(()=>{
+checkTask(taskId);
+},5000);
 }
 
 async function checkTask(taskId){
 
-  const btn = document.getElementById(taskId+"Btn");
+const btn = document.getElementById(taskId+"Btn");
 
-  const res = await fetch("/api/verify-task",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ telegramId, taskId })
-  });
+const res = await fetch("/api/verify-task",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({ telegramId, taskId })
+});
 
-  const data = await res.json();
+const data = await res.json();
 
-  if(data.success){
-    btn.innerText = "Completed";
-    btn.style.background = "green";
-    btn.disabled = true;
-    await loadUser();
-  }else{
-    btn.innerText = "Start";
-    btn.disabled = false;
-    alert("Join channel first!");
-  }
+if(data.success){
+btn.innerText = "Completed";
+btn.classList.add("completed");
+btn.disabled = true;
+await loadUser();
+}else{
+btn.innerText = "Start";
+btn.disabled = false;
+alert("Join channel first!");
+}
   }
