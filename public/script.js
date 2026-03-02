@@ -113,6 +113,14 @@ body:JSON.stringify({telegramId})
 });
 
 const data = await res.json();
+
+// ✅ LIMIT HANDLE
+if(data.limit){
+alert("Daily 35 ads limit reached!");
+btn.disabled=true;
+return;
+}
+
 if(data.success){
 await loadUser();
 }
