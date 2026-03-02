@@ -45,6 +45,7 @@ app.post("/api/user", async (req,res)=>{
     await user.save();
   }
 
+  // ✅ DAILY RESET FIX
   if(user.lastAdDate !== todayDate()){
     user.todayAds = 0;
     user.lastAdDate = todayDate();
@@ -65,18 +66,33 @@ app.post("/api/ad-complete", async (req,res)=>{
     return res.json({blocked:true});
   }
 
+  // ✅ DAILY RESET FIX (important)
+  if(user.lastAdDate !== todayDate()){
+    user.todayAds = 0;
+    user.lastAdDate = todayDate();
+  }
+
+  // ✅ LIMIT CHECK
   if(user.todayAds >= 35){
-    return res.json({msg:"Daily limit reached"});
+    return res.json({
+      success:false,
+      limit:true,
+      todayAds:user.todayAds
+    });
   }
 
   user.balance += 10;
   user.totalEarn += 10;
   user.todayAds += 1;
+
   await user.save();
 
-  res.json({ success:true });
+  res.json({
+    success:true,
+    todayAds:user.todayAds,
+    remaining:35 - user.todayAds
+  });
 });
-
 /* ================= WITHDRAW ================= */
 app.post("/api/withdraw", async (req,res)=>{
 
