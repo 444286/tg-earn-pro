@@ -252,3 +252,40 @@ input.select();
 document.execCommand("copy");
 alert("Referral link copied");
   }
+function startTask(taskId, link){
+
+  const btn = document.getElementById(taskId+"Btn");
+
+  window.open(link,"_blank");
+
+  btn.innerText = "Checking...";
+  btn.disabled = true;
+
+  setTimeout(()=>{
+    checkTask(taskId);
+  },5000);
+}
+
+async function checkTask(taskId){
+
+  const btn = document.getElementById(taskId+"Btn");
+
+  const res = await fetch("/api/verify-task",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ telegramId, taskId })
+  });
+
+  const data = await res.json();
+
+  if(data.success){
+    btn.innerText = "Completed";
+    btn.style.background = "green";
+    btn.disabled = true;
+    await loadUser();
+  }else{
+    btn.innerText = "Start";
+    btn.disabled = false;
+    alert("Join channel first!");
+  }
+  }
