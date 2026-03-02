@@ -93,6 +93,69 @@ app.post("/api/ad-complete", async (req,res)=>{
     remaining:35 - user.todayAds
   });
 });
+
+/* ================= VERIFY TG TASK ================= */
+app.post("/api/verify-task", async (req,res)=>{
+
+  const { telegramId, taskId } = req.body;
+  const user = await User.findOne({ telegramId });
+
+  if(!user) return res.json({ success:false });
+
+  if(user.completedTasks.includes(taskId)){
+    return res.json({ success:true, already:true });
+  }
+
+  let channel = null;
+  let reward = 0;
+
+  if(taskId === "task1"){
+    channel = process.env.CHANNEL_1;
+    reward = 10;
+  }
+
+  if(taskId === "task2"){
+    channel = process.env.CHANNEL_2;
+    reward = 15;
+  }
+
+  if(taskId === "task3"){
+    channel = process.env.CHANNEL_3;
+    reward = 20;
+  }
+
+  if(!channel) return res.json({ success:false });
+
+  try{
+
+    const response = await fetch(
+      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getChatMember?chat_id=${channel}&user_id=${telegramId}`
+    );
+
+    const data = await response.json();
+
+    if(
+      data.result.status === "member" ||
+      data.result.status === "administrator" ||
+      data.result.status === "creator"
+    ){
+
+      user.balance += reward;
+      user.totalEarn += reward;
+      user.completedTasks.push(taskId);
+
+      await user.save();
+
+      return res.json({ success:true });
+
+    }else{
+      return res.json({ success:false });
+    }
+
+  }catch{
+    return res.json({ success:false });
+  }
+});
 /* ================= WITHDRAW ================= */
 app.post("/api/withdraw", async (req,res)=>{
 
