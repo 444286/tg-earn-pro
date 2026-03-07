@@ -302,25 +302,21 @@ button:disabled{
 .support-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
-margin-top:20px;
+gap:18px;
+margin-top:40px;
+padding:0 10px;
 }
 
-/* SUPPORT BOX */
+/* SUPPORT CARD */
 
-.support-box{
-background:rgba(255,255,255,0.04);
-border-radius:18px;
-padding:22px 15px;
+.support-card{
+background:#0f1725;
+border-radius:20px;
+padding:25px 15px;
 text-align:center;
-border:1px solid rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-transition:0.25s;
-}
-
-.support-box:hover{
-transform:translateY(-3px);
-border:1px solid rgba(255,255,255,0.15);
+color:white;
+border:1px solid rgba(255,255,255,0.05);
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
 /* ICON */
@@ -329,7 +325,7 @@ border:1px solid rgba(255,255,255,0.15);
 width:55px;
 height:55px;
 border-radius:50%;
-background:rgba(255,255,255,0.08);
+background:#1b2436;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -340,12 +336,12 @@ margin-bottom:10px;
 
 /* TEXT */
 
-.support-box h3{
+.support-card h3{
 font-size:15px;
 margin:5px 0;
 }
 
-.support-box p{
+.support-card p{
 font-size:12px;
 opacity:0.7;
 }
