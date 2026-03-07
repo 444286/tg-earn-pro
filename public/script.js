@@ -2,10 +2,16 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 
 let telegramId;
+let AdController;
 let cooldown=false;
 let lastBalance = 0;
 
 window.addEventListener("load",()=>{
+if(window.Adsgram){
+AdController = window.Adsgram.init({
+blockId:"int-23635"
+});
+}
 loadUser();
 });
 
@@ -99,14 +105,41 @@ loadWithdrawHistory();
 
 /* WATCH AD */
 async function watchAd(){
+
 if(cooldown) return;
 
 const btn=document.getElementById("adBtn");
 const cd=document.getElementById("countdownText");
 
+btn.disabled=true;
+
 try{
 
-await show_10692813().then(async () => {
+/* MONETAG 1 */
+
+try{
+await showMonetag();
+}catch(e){
+console.log("Monetag 1 failed");
+}
+
+/* ADSGRAM */
+
+try{
+await AdController.show();
+}catch(e){
+console.log("Adsgram failed");
+}
+
+/* MONETAG 2 */
+
+try{
+await showMonetag();
+}catch(e){
+console.log("Monetag 2 failed");
+}
+
+/* REWARD */
 
 const res = await fetch("/api/ad-complete",{  
 method:"POST",  
@@ -126,10 +159,13 @@ if(data.success){
 await loadUser();
 }
 
-});
+}catch(e){
+console.log("Ad chain stopped");
+}
+
+/* COOLDOWN */
 
 cooldown=true;
-btn.disabled=true;
 
 let sec=30;
 cd.innerText="পুনরায় "+sec+"s পরে";
@@ -145,9 +181,6 @@ cd.innerText="";
 }
 },1000);
 
-}catch{
-console.log("Ad closed");
-}
 }
 
 /* WITHDRAW */
@@ -282,4 +315,31 @@ btn.innerText = "Start";
 btn.disabled = false;
 alert("Join channel first!");
 }
+}
+
+
+function showMonetag(){
+
+return new Promise((resolve)=>{
+
+try{
+
+show_10692813().then(()=>{
+
+resolve();
+
+}).catch(()=>{
+
+resolve();
+
+});
+
+}catch{
+
+resolve();
+
+}
+
+});
+
 }
