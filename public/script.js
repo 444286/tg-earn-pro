@@ -18,7 +18,7 @@ blockId:"int-23635"
 });
 
 AdControllerReward = window.Adsgram.init({
-blockId:"init-23638"
+blockId:"int-23638"
 });
 
 }
