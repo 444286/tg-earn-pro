@@ -2,16 +2,10 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 
 let telegramId;
-let AdController;
 let cooldown=false;
 let lastBalance = 0;
 
 window.addEventListener("load",()=>{
-if(window.Adsgram){
-AdController = window.Adsgram.init({
-blockId:"int-23635"
-});
-}
 loadUser();
 });
 
@@ -85,7 +79,7 @@ document.getElementById("progressFill").style.width =
 document.getElementById("refLink").value =
 "https://t.me/loyalti_app_bot?start="+telegramId;
 
-/* 🔥 AUTO DETECT COMPLETED TASKS */
+/* AUTO DETECT COMPLETED TASKS */
 if(data.completedTasks){
 
 ["task1","task2","task3"].forEach(task=>{
@@ -111,7 +105,8 @@ const btn=document.getElementById("adBtn");
 const cd=document.getElementById("countdownText");
 
 try{
-await AdController.show();
+
+await show_10692813().then(async () => {
 
 const res = await fetch("/api/ad-complete",{  
 method:"POST",  
@@ -130,6 +125,8 @@ return;
 if(data.success){
 await loadUser();
 }
+
+});
 
 cooldown=true;
 btn.disabled=true;
@@ -247,7 +244,7 @@ document.execCommand("copy");
 alert("Referral link copied");
 }
 
-/* ================= TASK SYSTEM ================= */
+/* TASK SYSTEM */
 
 function startTask(taskId, link){
 
@@ -285,4 +282,4 @@ btn.innerText = "Start";
 btn.disabled = false;
 alert("Join channel first!");
 }
-  }
+}
