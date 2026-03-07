@@ -125,8 +125,14 @@ console.log("Monetag 1 failed");
 
 /* ADSGRAM */
 
+/* ADSGRAM */
+
 try{
+
+if(AdController){
 await AdController.show();
+}
+
 }catch(e){
 console.log("Adsgram failed");
 }
