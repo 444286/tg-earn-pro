@@ -2,17 +2,29 @@ const tg = window.Telegram.WebApp;
 tg.expand();
 
 let telegramId;
-let AdController;
+
+let AdControllerInterstitial;
+let AdControllerReward;
+
 let cooldown=false;
 let lastBalance = 0;
 
 window.addEventListener("load",()=>{
+
 if(window.Adsgram){
-AdController = window.Adsgram.init({
+
+AdControllerInterstitial = window.Adsgram.init({
 blockId:"int-23635"
 });
+
+AdControllerReward = window.Adsgram.init({
+blockId:"rew-23638"
+});
+
 }
+
 loadUser();
+
 });
 
 /* NAV */
@@ -64,9 +76,9 @@ if(!data) return;
 
 /* BLOCK CHECK */
 if(data.blocked){
-  alert("Account Blocked");
-  Telegram.WebApp.close();
-  return;
+alert("Account Blocked");
+Telegram.WebApp.close();
+return;
 }
 
 document.getElementById("username").innerText = tgUser.first_name;
@@ -86,24 +98,33 @@ document.getElementById("refLink").value =
 "https://t.me/loyalti_app_bot?start="+telegramId;
 
 /* AUTO DETECT COMPLETED TASKS */
+
 if(data.completedTasks){
 
 ["task1","task2","task3"].forEach(task=>{
+
 if(data.completedTasks.includes(task)){
+
 const btn = document.getElementById(task+"Btn");
+
 if(btn){
 btn.innerText = "Completed";
 btn.classList.add("completed");
 btn.disabled = true;
 }
+
 }
+
 });
+
 }
 
 loadWithdrawHistory();
+
 }
 
 /* WATCH AD */
+
 async function watchAd(){
 
 if(cooldown) return;
@@ -115,42 +136,32 @@ btn.disabled=true;
 
 try{
 
-/* MONETAG 1 */
+/* MONETAG */
 
-try{
 await showMonetag();
-}catch(e){
-console.log("Monetag 1 failed");
-}
 
-/* ADSGRAM */
-
-/* ADSGRAM */
+/* ADSGRAM INTERSTITIAL */
 
 try{
 
-if(AdController){
-await AdController.show();
+if(AdControllerInterstitial){
+await AdControllerInterstitial.show();
 }
 
 }catch(e){
 console.log("Adsgram failed");
 }
 
-/* MONETAG 2 */
+/* MONETAG */
 
-try{
 await showMonetag();
-}catch(e){
-console.log("Monetag 2 failed");
-}
 
 /* REWARD */
 
-const res = await fetch("/api/ad-complete",{  
-method:"POST",  
-headers:{"Content-Type":"application/json"},  
-body:JSON.stringify({telegramId})  
+const res = await fetch("/api/ad-complete",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({telegramId})
 });
 
 const data = await res.json();
@@ -177,19 +188,29 @@ let sec=30;
 cd.innerText="পুনরায় "+sec+"s পরে";
 
 const timer=setInterval(()=>{
+
 sec--;
+
 cd.innerText="পুনরায় "+sec+"s পরে";
+
 if(sec<=0){
+
 clearInterval(timer);
+
 cooldown=false;
+
 btn.disabled=false;
+
 cd.innerText="";
+
 }
+
 },1000);
 
 }
 
 /* WITHDRAW */
+
 async function withdraw(){
 
 const method = document.getElementById("method").value;
@@ -212,11 +233,43 @@ btn.innerText = "Processing...";
 
 try{
 
-await fetch("/api/withdraw",{
+/* MONETAG 1 */
+
+try{
+await showMonetag();
+}catch(e){
+console.log("Monetag failed");
+}
+
+/* ADSGRAM REWARDED */
+
+try{
+if(AdControllerReward){
+await AdControllerReward.show();
+}
+}catch(e){
+console.log("Adsgram reward failed");
+}
+
+/* MONETAG 2 */
+
+try{
+await showMonetag();
+}catch(e){
+console.log("Monetag 2 failed");
+}
+
+/* WITHDRAW REQUEST */
+
+const res = await fetch("/api/withdraw",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({telegramId,amount,method,number})
 });
+
+const data = await res.json();
+
+if(data.success){
 
 await loadUser();
 await loadWithdrawHistory();
@@ -224,25 +277,38 @@ await loadWithdrawHistory();
 document.getElementById("number").value="";
 document.getElementById("amount").value="";
 
-btn.innerText = "✅ Success";
+btn.innerText = "✅ Withdraw Success";
+
+}else{
+
+btn.innerText = "❌ Withdraw Failed";
+
+}
 
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
-},2000);
+},3000);
 
 }catch{
-btn.innerText = "❌ Failed";
+
+btn.innerText = "❌ Error";
+
 setTimeout(()=>{
 btn.innerText = "Request Withdraw";
 btn.disabled = false;
-},2000);
+},3000);
+
 }
+
 }
 
 /* WITHDRAW HISTORY */
+
 async function loadWithdrawHistory(){
+
 const box=document.getElementById("withdrawHistory");
+
 if(!telegramId) return;
 
 const res=await fetch("/api/user/withdraws/"+telegramId);
@@ -256,7 +322,9 @@ return;
 }
 
 data.forEach(w=>{
+
 let statusClass="status-pending";
+
 if(w.status==="approved") statusClass="status-approved";
 if(w.status==="rejected") statusClass="status-rejected";
 
@@ -272,15 +340,23 @@ ${new Date(w.createdAt).toLocaleString()}
 ${w.reason ? `<div class="reject-reason">Reason: ${w.reason}</div>`:""}
 </div>
 `;
+
 });
+
 }
 
 /* REF COPY */
+
 function copyRef(){
+
 const input=document.getElementById("refLink");
+
 input.select();
+
 document.execCommand("copy");
+
 alert("Referral link copied");
+
 }
 
 /* TASK SYSTEM */
@@ -297,6 +373,7 @@ btn.disabled = true;
 setTimeout(()=>{
 checkTask(taskId);
 },5000);
+
 }
 
 async function checkTask(taskId){
@@ -312,17 +389,23 @@ body:JSON.stringify({ telegramId, taskId })
 const data = await res.json();
 
 if(data.success){
+
 btn.innerText = "Completed";
 btn.classList.add("completed");
 btn.disabled = true;
+
 await loadUser();
+
 }else{
+
 btn.innerText = "Start";
 btn.disabled = false;
+
 alert("Join channel first!");
-}
+
 }
 
+}
 
 function showMonetag(){
 
