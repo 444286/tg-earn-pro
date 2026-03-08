@@ -66,14 +66,33 @@ if(!tg.initDataUnsafe?.user) return;
 const tgUser = tg.initDataUnsafe.user;
 telegramId = String(tgUser.id);
 
+/* REFERRAL DETECT */
+
+const urlParams = new URLSearchParams(window.location.search);
+const ref = urlParams.get("start");
+
 const res = await fetch("/api/user",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({ telegramId })
+body:JSON.stringify({ 
+telegramId,
+username: tgUser.first_name,
+ref
+})
 });
 
 const data = await res.json();
 if(!data) return;
+
+/* REFERRAL COUNT SHOW */
+
+const refCount = document.getElementById("refCount");
+if(refCount){
+refCount.innerText = data.referrals || 0;
+}
+
+}
+
 
 /* BLOCK CHECK */
 if(data.blocked){
