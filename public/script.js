@@ -91,7 +91,7 @@ if(refCount){
 refCount.innerText = data.referrals || 0;
 }
 
-}
+
 
 
 /* BLOCK CHECK */
