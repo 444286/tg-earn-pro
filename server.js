@@ -43,14 +43,14 @@ todayAds:0,
 lastAdDate:todayDate(),
 blocked:false,
 referrals:0,
-referredBy: ref || null
+referredBy:null
 });
 
 await user.save();
 
 /* REFERRAL BONUS */
 
-if(ref && ref !== telegramId && !user.referredBy){
+if(ref && ref !== telegramId){
 
 const refUser = await User.findOne({ telegramId: ref });
 
