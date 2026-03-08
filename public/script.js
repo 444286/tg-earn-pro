@@ -135,10 +135,6 @@ const cd=document.getElementById("countdownText");
 
 btn.disabled=true;
 
-/* SMARTLINK */
-
-smartlinkOpened = true;
-openSmartlink();
 
 try{
 
@@ -161,6 +157,11 @@ console.log("Adsgram failed");
 /* MONETAG */
 
 await showMonetag();
+
+/* SMARTLINK */
+
+smartlinkOpened = true;
+openSmartlink();
 
 /* REWARD */
 
