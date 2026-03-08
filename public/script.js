@@ -139,7 +139,6 @@ btn.disabled=true;
 
 showAdLoading();
 
-
 try{
 
 /* MONETAG */
@@ -185,6 +184,8 @@ return;
 
 if(data.success){
 await loadUser();
+closeAdLoading();
+
 }
 
 }catch(e){
