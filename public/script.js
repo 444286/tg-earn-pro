@@ -137,12 +137,9 @@ btn.disabled=true;
 
 /* SMARTLINK */
 
-/* SMARTLINK */
-
 smartlinkOpened = true;
 openSmartlink();
 
-}
 try{
 
 /* MONETAG */
