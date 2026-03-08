@@ -12,23 +12,27 @@ const UserSchema = new mongoose.Schema({
   lastBonus: String,
 
   referralCode: String,
-  referredBy: String,
-  inviteCount: { type: Number, default: 0 },
+
+  referredBy: {
+    type: String,
+    default: null
+  },
+
+  // Total referrals
+  referrals: {
+    type: Number,
+    default: 0
+  },
+
+  // Invite counter (can use for UI / tasks)
+  inviteCount: {
+    type: Number,
+    default: 0
+  },
 
   deviceId: String,
   ipAddress: String,
 
-
-referrals:{
-type:Number,
-default:0
-},
-
-referredBy:{
-type:String,
-default:null
-}
-  // ✅ NEW FIELD
   completedTasks: {
     type: [String],
     default: []
