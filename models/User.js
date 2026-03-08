@@ -18,6 +18,16 @@ const UserSchema = new mongoose.Schema({
   deviceId: String,
   ipAddress: String,
 
+
+referrals:{
+type:Number,
+default:0
+},
+
+referredBy:{
+type:String,
+default:null
+}
   // ✅ NEW FIELD
   completedTasks: {
     type: [String],
