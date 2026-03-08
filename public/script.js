@@ -141,9 +141,8 @@ btn.disabled=true;
 
 smartlinkOpened = true;
 openSmartlink();
-await new Promise(r => setTimeout(r,4000));
 
-
+}
 try{
 
 /* MONETAG */
