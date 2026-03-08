@@ -50,7 +50,7 @@ await user.save();
 
 /* REFERRAL BONUS */
 
-if(ref){
+if(ref && ref !== telegramId && !user.referredBy){
 
 const refUser = await User.findOne({ telegramId: ref });
 
@@ -59,7 +59,7 @@ if(refUser){
 refUser.balance += 20;
 refUser.totalEarn += 20;
 refUser.referrals += 1;
-
+refUser.inviteCount += 1;
 await refUser.save();
 
 }
