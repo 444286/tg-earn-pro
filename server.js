@@ -56,18 +56,18 @@ const refUser = await User.findOne({ telegramId: ref });
 
 if(refUser){
 
+user.referredBy = ref;
+
 refUser.balance += 20;
 refUser.totalEarn += 20;
 refUser.referrals += 1;
-refUser.inviteCount += 1;
+
 await refUser.save();
+await user.save();
 
 }
 
 }
-
-}
-
   // ✅ DAILY RESET FIX
   if(user.lastAdDate !== todayDate()){
     user.todayAds = 0;
