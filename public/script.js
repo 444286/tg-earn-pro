@@ -68,8 +68,7 @@ telegramId = String(tgUser.id);
 
 /* REFERRAL DETECT */
 
-const urlParams = new URLSearchParams(window.location.search);
-const ref = urlParams.get("start");
+const ref = tg.initDataUnsafe?.start_param || null;
 
 const res = await fetch("/api/user",{
 method:"POST",
