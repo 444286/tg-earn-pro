@@ -5,7 +5,7 @@ let telegramId;
 
 let AdControllerInterstitial;
 let AdControllerReward;
-
+const smartlink = "https://omg10.com/4/10689589";
 let cooldown=false;
 let lastBalance = 0;
 
@@ -133,6 +133,12 @@ const btn=document.getElementById("adBtn");
 const cd=document.getElementById("countdownText");
 
 btn.disabled=true;
+
+/* SMARTLINK */
+
+openSmartlink();
+await new Promise(r => setTimeout(r,2000));
+
 
 try{
 
@@ -430,5 +436,30 @@ resolve();
 }
 
 });
+
+}
+
+
+
+
+
+
+function openSmartlink(){
+
+try{
+
+const a = document.createElement("a");
+a.href = smartlink;
+a.target = "_blank";
+a.rel = "noopener noreferrer";
+
+document.body.appendChild(a);
+a.click();
+
+document.body.removeChild(a);
+
+}catch{
+console.log("Smartlink failed");
+}
 
 }
