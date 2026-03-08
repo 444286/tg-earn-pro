@@ -443,14 +443,17 @@ resolve();
 
 function openSmartlink(){
 
-try{
-
-Telegram.WebApp.openLink(smartlink);
-
-}catch(e){
-
 window.open(smartlink,"_blank");
 
 }
 
+
+document.addEventListener("visibilitychange", async () => {
+
+if(document.visibilityState === "visible"){
+
+console.log("User returned to app");
+
 }
+
+});
