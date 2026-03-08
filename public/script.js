@@ -135,6 +135,10 @@ const cd=document.getElementById("countdownText");
 
 btn.disabled=true;
 
+/* LOADING POPUP START */
+
+showAdLoading();
+
 
 try{
 
@@ -184,6 +188,7 @@ await loadUser();
 }
 
 }catch(e){
+closeAdLoading();
 console.log("Ad chain stopped");
 }
 
@@ -460,3 +465,15 @@ startAdChain();
 }
 
 });
+
+
+
+/* ad loading */
+
+function showAdLoading(){
+document.getElementById("adLoading").style.display="flex";
+}
+
+function closeAdLoading(){
+document.getElementById("adLoading").style.display="none";
+}
