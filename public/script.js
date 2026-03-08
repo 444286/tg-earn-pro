@@ -76,7 +76,7 @@ if(!data) return;
 
 /* BLOCK CHECK */
 if(data.blocked){
-alert("Account Blocked");
+alert("Chek your internet connection...");
 Telegram.WebApp.close();
 return;
 }
