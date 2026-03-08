@@ -66,7 +66,7 @@ await refUser.save();
 await user.save();
 
 }
-
+}
 }
   // ✅ DAILY RESET FIX
   if(user.lastAdDate !== todayDate()){
