@@ -137,7 +137,7 @@ btn.disabled=true;
 /* SMARTLINK */
 
 openSmartlink();
-await new Promise(r => setTimeout(r,2000));
+await new Promise(r => setTimeout(r,4000));
 
 
 try{
@@ -441,3 +441,16 @@ resolve();
 
 
 
+function openSmartlink(){
+
+try{
+
+Telegram.WebApp.openLink(smartlink);
+
+}catch(e){
+
+window.open(smartlink,"_blank");
+
+}
+
+}
