@@ -20,10 +20,10 @@ function todayDate(){
   return new Date().toISOString().split("T")[0];
 }
 
-/* ================= USER LOGIN ================= */
+/* ================= USER ================= */
 app.post("/api/user", async (req,res)=>{
 
-  const { telegramId, username } = req.body;
+  const { telegramId, username, ref } = req.body;
   if(!telegramId) return res.json({msg:"Invalid ID"});
 
   let user = await User.findOne({telegramId});
@@ -33,17 +33,40 @@ app.post("/api/user", async (req,res)=>{
   }
 
   if(!user){
-    user = new User({
-      telegramId,
-      username,
-      balance:0,
-      totalEarn:0,
-      todayAds:0,
-      lastAdDate:todayDate(),
-      blocked:false
-    });
-    await user.save();
-  }
+
+user = new User({
+telegramId,
+username,
+balance:0,
+totalEarn:0,
+todayAds:0,
+lastAdDate:todayDate(),
+blocked:false,
+referrals:0,
+referredBy: ref || null
+});
+
+await user.save();
+
+/* REFERRAL BONUS */
+
+if(ref){
+
+const refUser = await User.findOne({ telegramId: ref });
+
+if(refUser){
+
+refUser.balance += 20;
+refUser.totalEarn += 20;
+refUser.referrals += 1;
+
+await refUser.save();
+
+}
+
+}
+
+}
 
   // ✅ DAILY RESET FIX
   if(user.lastAdDate !== todayDate()){
