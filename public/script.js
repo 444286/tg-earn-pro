@@ -6,6 +6,7 @@ let telegramId;
 let AdControllerInterstitial;
 let AdControllerReward;
 const smartlink = "https://omg10.com/4/10689589";
+let smartlinkOpened = false;
 let cooldown=false;
 let lastBalance = 0;
 
@@ -136,6 +137,9 @@ btn.disabled=true;
 
 /* SMARTLINK */
 
+/* SMARTLINK */
+
+smartlinkOpened = true;
 openSmartlink();
 await new Promise(r => setTimeout(r,4000));
 
@@ -450,9 +454,11 @@ window.open(smartlink,"_blank");
 
 document.addEventListener("visibilitychange", async () => {
 
-if(document.visibilityState === "visible"){
+if(document.visibilityState === "visible" && smartlinkOpened){
 
-console.log("User returned to app");
+smartlinkOpened = false;
+
+startAdChain();
 
 }
 
