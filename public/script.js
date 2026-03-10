@@ -497,13 +497,13 @@ function closeAdLoading(){
 document.getElementById("adLoading").style.display="none";
 }
 
-*/ tutorial */
+/* tutorial */
 function playVideo(){
 
 document.getElementById("videoPreview").style.display="none";
-document.getElementById("videoPlayer").style.display="block";
+document.getElementById("videoFrame").style.display="block";
 
-document.getElementById("youtubeFrame").src =
+document.getElementById("youtubeVideo").src =
 "https://www.youtube.com/embed/bX_EBOQdE3Y?autoplay=1";
 
 }
