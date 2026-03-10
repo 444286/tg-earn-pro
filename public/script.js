@@ -59,6 +59,7 @@ lastBalance = newBalance;
 }
 
 /* LOAD USER */
+console.log("TG DATA:", tg.initDataUnsafe);
 async function loadUser(){
 
 if(!tg.initDataUnsafe?.user) return;
