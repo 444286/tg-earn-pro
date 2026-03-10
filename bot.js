@@ -13,7 +13,7 @@ bot.sendMessage(chatId,
 ⬇️ নিচে আয় শুরু করুন বাটনে ক্লিক করুন!
 
 🔗 আপনার রেফার লিংক:
-https://t.me/loyalti_app_bot/start=${userId}`,
+https://t.me/loyalti_app_bot/app?startapp=${userId}`,
 {
 reply_markup:{
 inline_keyboard:[
