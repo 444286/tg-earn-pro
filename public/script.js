@@ -59,7 +59,6 @@ lastBalance = newBalance;
 }
 
 /* LOAD USER */
-console.log("TG DATA:", tg.initDataUnsafe);
 async function loadUser(){
 
 if(!tg.initDataUnsafe?.user) return;
@@ -67,32 +66,14 @@ if(!tg.initDataUnsafe?.user) return;
 const tgUser = tg.initDataUnsafe.user;
 telegramId = String(tgUser.id);
 
-/* REFERRAL DETECT */
-
-const ref = tg.initDataUnsafe?.start_param || null;
-
 const res = await fetch("/api/user",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({ 
-telegramId,
-username: tgUser.first_name,
-ref
-})
+body:JSON.stringify({ telegramId })
 });
 
 const data = await res.json();
 if(!data) return;
-
-/* REFERRAL COUNT SHOW */
-
-const refCount = document.getElementById("refCount");
-if(refCount){
-refCount.innerText = data.referrals || 0;
-}
-
-
-
 
 /* BLOCK CHECK */
 if(data.blocked){
@@ -496,43 +477,4 @@ document.getElementById("adLoading").style.display="flex";
 
 function closeAdLoading(){
 document.getElementById("adLoading").style.display="none";
-}
-
-/* tutorial */
-function playVideo(){
-
-document.getElementById("videoPreview").style.display="none";
-document.getElementById("videoFrame").style.display="block";
-
-document.getElementById("youtubeVideo").src =
-"https://www.youtube.com/embed/bX_EBOQdE3Y?autoplay=1";
-
-}
-
-
-/* full screen */
-function goFullScreen(){
-
-let video = document.getElementById("videoFrame");
-
-if(video.requestFullscreen){
-video.requestFullscreen();
-}
-else if(video.webkitRequestFullscreen){
-video.webkitRequestFullscreen();
-}
-else if(video.msRequestFullscreen){
-video.msRequestFullscreen();
-}
-
-}
-
-
-/* fullscreen 2*/
-function openVideo(){
-
-Telegram.WebApp.openTelegramLink(
-"https://t.me/zomato_app_payment_proof/94"
-);
-
 }
