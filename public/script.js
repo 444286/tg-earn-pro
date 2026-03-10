@@ -501,10 +501,9 @@ document.getElementById("adLoading").style.display="none";
 function playVideo(){
 
 document.getElementById("videoPreview").style.display="none";
+document.getElementById("videoPlayer").style.display="block";
 
-document.getElementById("videoFrame").style.display="block";
-
-document.getElementById("youtubeVideo").src =
+document.getElementById("youtubeFrame").src =
 "https://www.youtube.com/embed/bX_EBOQdE3Y?autoplay=1";
 
 }
