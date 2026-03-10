@@ -525,3 +525,13 @@ video.msRequestFullscreen();
 }
 
 }
+
+
+/* fullscreen 2*/
+function openVideo(){
+
+Telegram.WebApp.openTelegramLink(
+"https://t.me/zomato_app_payment_proof/94"
+);
+
+}
