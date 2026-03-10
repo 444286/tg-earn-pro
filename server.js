@@ -3,7 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const fetch = require("node-fetch");
 
 const User = require("./models/User");
 const Withdraw = require("./models/Withdraw");
@@ -21,10 +20,10 @@ function todayDate(){
   return new Date().toISOString().split("T")[0];
 }
 
-/* ================= USER ================= */
+/* ================= USER LOGIN ================= */
 app.post("/api/user", async (req,res)=>{
 
-  const { telegramId, username, ref } = req.body;
+  const { telegramId, username } = req.body;
   if(!telegramId) return res.json({msg:"Invalid ID"});
 
   let user = await User.findOne({telegramId});
@@ -34,41 +33,18 @@ app.post("/api/user", async (req,res)=>{
   }
 
   if(!user){
+    user = new User({
+      telegramId,
+      username,
+      balance:0,
+      totalEarn:0,
+      todayAds:0,
+      lastAdDate:todayDate(),
+      blocked:false
+    });
+    await user.save();
+  }
 
-user = new User({
-telegramId,
-username,
-balance:0,
-totalEarn:0,
-todayAds:0,
-lastAdDate:todayDate(),
-blocked:false,
-referrals:0,
-referredBy:null
-});
-
-await user.save();
-
-/* REFERRAL BONUS */
-
-if(ref && ref !== telegramId){
-
-const refUser = await User.findOne({ telegramId: ref });
-
-if(refUser){
-
-user.referredBy = ref;
-
-refUser.balance += 20;
-refUser.totalEarn += 20;
-refUser.referrals += 1;
-
-await refUser.save();
-await user.save();
-
-}
-}
-}
   // ✅ DAILY RESET FIX
   if(user.lastAdDate !== todayDate()){
     user.todayAds = 0;
@@ -326,13 +302,9 @@ app.post("/api/admin/unblock", verifyAdmin, async (req,res)=>{
   res.json({ success:true });
 });
 
-
-
 app.get("/",(req,res)=>{
   res.send("Server running");
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>console.log("Server running"));
-
-
