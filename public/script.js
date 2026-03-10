@@ -496,3 +496,14 @@ document.getElementById("adLoading").style.display="flex";
 function closeAdLoading(){
 document.getElementById("adLoading").style.display="none";
 }
+
+*/ tutorial */
+function playVideo(){
+
+document.getElementById("videoPreview").style.display="none";
+document.getElementById("videoPlayer").style.display="block";
+
+document.getElementById("youtubeFrame").src =
+"https://www.youtube.com/embed/bX_EBOQdE3Y?autoplay=1";
+
+}
