@@ -333,4 +333,9 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>console.log("Server running"));
 
 
-require("./bot");
+const bot = require("./bot");
+
+app.post("/bot",(req,res)=>{
+bot.processUpdate(req.body);
+res.sendStatus(200);
+});
