@@ -22,28 +22,28 @@ inline_keyboard:[
 {
 text:"আয় শুরু করুন",
 web_app:{
-url:"https://yourdomain.com"
+url:"https://t.me/loyalti_app_bot"
 }
 }
 ],
 
 [
 {
-text:"অফিশিয়াল নিউজ",
+text:"অফিসিয়াল গ্রুপ",
 url:"https://t.me/zomato_app_official_channel"
 }
 ],
 
 [
 {
-text:"কাজের ভিডিও",
-url:"https://t.me/your_channel"
+text:"কিভাবে কাজ করবেন ভিডিও",
+url:"https://t.me/zomato_app_payment_proof/94"
 }
 ],
 
 [
 {
-text:"পেমেন্ট গ্রুপ",
+text:"পেমেন্ট প্রুফ গ্রুপ",
 url:"https://t.me/zomato_app_payment_proof"
 }
 ]
