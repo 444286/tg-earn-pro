@@ -56,6 +56,6 @@ url:"https://t.me/zomato_app_payment_proof"
 
 /* WEBHOOK */
 
-bot.setWebHook("https://loyalti-app-2026.onrender.com/bot");
+bot.setWebHook("https://loyalty-app-2026.onrender.com/bot");
 
 module.exports = bot;
