@@ -325,6 +325,13 @@ app.post("/api/admin/unblock", verifyAdmin, async (req,res)=>{
   res.json({ success:true });
 });
 
+const bot = require("./bot");
+
+app.post("/bot",(req,res)=>{
+bot.processUpdate(req.body);
+res.sendStatus(200);
+});
+
 app.get("/",(req,res)=>{
   res.send("Server running");
 });
@@ -333,9 +340,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>console.log("Server running"));
 
 
-const bot = require("./bot");
-
-app.post("/bot",(req,res)=>{
-bot.processUpdate(req.body);
-res.sendStatus(200);
-});
