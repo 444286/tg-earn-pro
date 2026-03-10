@@ -507,3 +507,21 @@ document.getElementById("youtubeVideo").src =
 "https://www.youtube.com/embed/bX_EBOQdE3Y?autoplay=1";
 
 }
+
+
+/* full screen */
+function goFullScreen(){
+
+let video = document.getElementById("videoFrame");
+
+if(video.requestFullscreen){
+video.requestFullscreen();
+}
+else if(video.webkitRequestFullscreen){
+video.webkitRequestFullscreen();
+}
+else if(video.msRequestFullscreen){
+video.msRequestFullscreen();
+}
+
+}
