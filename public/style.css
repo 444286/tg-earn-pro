@@ -451,3 +451,27 @@ width:100%;
 height:220px;
 border-radius:10px;
 }
+
+.video-container{
+position:relative;
+width:100%;
+height:250px;
+}
+
+.video-container iframe{
+width:100%;
+height:100%;
+border-radius:12px;
+}
+
+.fullscreen-btn{
+position:absolute;
+right:10px;
+bottom:10px;
+background:black;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:6px;
+font-size:16px;
+}
