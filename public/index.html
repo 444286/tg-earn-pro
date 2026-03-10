@@ -106,21 +106,33 @@ Start
 </div> <!-- ✅ HOME CLOSE -->
 
 <!-- ================= SUPPORT ================= -->
-<div class="support-video-card">
+<div class="video-card">
 
-<div class="video-container">
+<div class="video-preview" id="videoPreview">
+
+<div class="play-btn">▶</div>
+
+<h3>কাজের ভিডিও</h3>
+
+<p>
+কিভাবে অ্যাপটি ব্যবহার করবেন—<br>
+টিউটোরিয়াল দেখে নিন।
+</p>
+
+<button onclick="playVideo()">ভিডিও দেখুন</button>
+
+<span>🎬 ভিডিও দেখে সব কিছু বুঝে নিন</span>
+
+</div>
+
+<div class="video-player" id="videoPlayer">
 <iframe 
-src="https://www.youtube.com/embed/bX_EBOQdE3Y" 
-title="Tutorial Video"
+src=""
+id="youtubeFrame"
 frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 allowfullscreen>
 </iframe>
 </div>
-
-<button class="watch-btn" onclick="playVideo()">
-ভিডিও দেখুন
-</button>
 
 </div>
 <div id="support" class="page">
