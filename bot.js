@@ -22,7 +22,7 @@ inline_keyboard:[
 {
 text:"আয় শুরু করুন",
 web_app:{
-url:"https://t.me/loyalti_app_bot"
+url:"https://t.me/loyalti_app_bot/app"
 }
 }
 ],
