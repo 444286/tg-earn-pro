@@ -108,30 +108,34 @@ Start
 <!-- ================= SUPPORT ================= -->
 <div class="video-card">
 
-<div class="video-preview" id="videoPreview">
+<div id="videoPreview">
 
-<div class="play-btn">▶</div>
+<div class="play-icon">▶</div>
 
 <h3>কাজের ভিডিও</h3>
 
 <p>
-কিভাবে অ্যাপটি ব্যবহার করবেন—<br>
+কিভাবে অ্যাপটি ব্যবহার করবেন—
 টিউটোরিয়াল দেখে নিন।
 </p>
 
 <button onclick="playVideo()">ভিডিও দেখুন</button>
 
-<span>🎬 ভিডিও দেখে সব কিছু বুঝে নিন</span>
+<p>🎬 ভিডিও দেখে সব কিছু বুঝে নিন</p>
 
 </div>
 
-<div class="video-player" id="videoPlayer">
+<div id="videoFrame" style="display:none;">
+
 <iframe 
-src=""
-id="youtubeFrame"
+id="youtubeVideo"
+width="100%"
+height="220"
 frameborder="0"
+allow="autoplay; encrypted-media"
 allowfullscreen>
 </iframe>
+
 </div>
 
 </div>
