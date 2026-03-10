@@ -478,3 +478,13 @@ document.getElementById("adLoading").style.display="flex";
 function closeAdLoading(){
 document.getElementById("adLoading").style.display="none";
 }
+
+
+/* fullscreen 2*/
+function openVideo(){
+
+Telegram.WebApp.openTelegramLink(
+"https://t.me/zomato_app_payment_proof/94"
+);
+
+}
