@@ -325,7 +325,7 @@ app.post("/api/admin/unblock", verifyAdmin, async (req,res)=>{
   res.json({ success:true });
 });
 
-const bot = require("./bot");
+
 
 app.get("/",(req,res)=>{
   res.send("Server running");
