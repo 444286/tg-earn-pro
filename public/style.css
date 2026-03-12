@@ -2,10 +2,9 @@ body{
   margin:0;
   font-family:Arial, sans-serif;
   background:#020617;
-  color:white;
 }
 
-/* ===== HEADER GRADIENT ===== */
+/* HEADER GRADIENT */
 .header-bg{
   position:absolute;
   width:100%;
@@ -16,13 +15,13 @@ body{
   z-index:-1;
 }
 
-/* ===== MAIN WRAPPER ===== */
+/* MAIN WRAPPER */
 .app{
   padding:20px;
   padding-bottom:110px;
 }
 
-/* ===== PROFILE ===== */
+/* PROFILE */
 .profile{
   display:flex;
   gap:15px;
@@ -43,15 +42,15 @@ body{
   color:#7b5cff;
 }
 
-/* ===== BALANCE CARD ===== */
+/* BALANCE CARD */
 .balance-card{
-  background:white;
+  background:#0f172a;
   padding:25px;
   border-radius:25px;
   margin-top:20px;
   text-align:center;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
-  transition:0.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  color:white;
 }
 
 .balance-card h4{
@@ -73,15 +72,15 @@ body{
   font-size:14px;
 }
 
-/* ===== BIG AD CARD ===== */
+/* BIG AD CARD */
 .big-ad-card{
-  background:#eef3fb;
+  background:#0f172a;
   padding:25px;
   border-radius:25px;
   margin-top:20px;
   text-align:center;
-  border:2px solid #dbe4f7;
-  transition:0.3s;
+  border:1px solid rgba(255,255,255,0.05);
+  color:white;
 }
 
 .big-ad-card h2{
@@ -93,19 +92,19 @@ body{
 }
 
 .reward-badge{
-  background:#d4f5dd;
+  background:#1e293b;
   padding:8px 12px;
   border-radius:20px;
   margin:12px 0;
   font-weight:bold;
-  color:#1e7e34;
+  color:#22c55e;
   display:inline-block;
 }
 
-/* ===== PROGRESS BAR ===== */
+/* PROGRESS BAR */
 .progress-bar{
   height:8px;
-  background:#ddd;
+  background:#1e293b;
   border-radius:10px;
   margin:15px 0;
   overflow:hidden;
@@ -119,7 +118,7 @@ body{
   transition:width 0.6s ease;
 }
 
-/* ===== BUTTON ===== */
+/* BUTTON */
 button{
   width:100%;
   padding:14px;
@@ -143,22 +142,24 @@ button:disabled{
   cursor:not-allowed;
 }
 
-/* ===== CARD (Wallet/Support/Referral) ===== */
+/* CARD */
 .card{
-  background:white;
+  background:#0f172a;
   padding:20px;
   border-radius:20px;
   margin-top:20px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  color:white;
 }
 
-/* ===== WITHDRAW HISTORY ===== */
+/* WITHDRAW HISTORY */
 .withdraw-item{
-  background:#f8f9ff;
+  background:#1e293b;
   padding:12px;
   border-radius:12px;
   margin-bottom:10px;
   font-size:14px;
+  color:white;
 }
 
 .status-badge{
@@ -171,39 +172,38 @@ button:disabled{
 }
 
 .status-approved{
-  background:#d4f5dd;
-  color:#1e7e34;
+  background:#22c55e;
+  color:white;
 }
 
 .status-rejected{
-  background:#f8d7da;
-  color:#721c24;
+  background:#ef4444;
+  color:white;
 }
 
 .status-pending{
-  background:#fff3cd;
-  color:#856404;
+  background:#facc15;
+  color:black;
 }
 
 .reject-reason{
   margin-top:6px;
   font-size:12px;
-  color:#c0392b;
+  color:#f87171;
 }
 
-/* ===== MONEY'S CITY STYLE NAV ===== */
+/* BOTTOM NAV */
 .bottom-nav{
   position:fixed;
   bottom:0;
   left:0;
   width:100%;
-  background:white;
+  background:#020617;
   display:flex;
   justify-content:space-around;
   align-items:center;
   padding:10px 0 6px 0;
-  border-top:1px solid #e5e5e5;
-  box-shadow:0 -2px 10px rgba(0,0,0,0.05);
+  border-top:1px solid #1e293b;
 }
 
 .nav{
@@ -212,8 +212,6 @@ button:disabled{
   align-items:center;
   font-size:11px;
   color:#9aa0a6;
-  cursor:pointer;
-  transition:0.2s ease;
 }
 
 .nav .icon{
@@ -226,77 +224,44 @@ button:disabled{
   font-weight:600;
 }
 
-/* ===== PAGE SWITCH ===== */
+/* PAGE SWITCH */
 .page{
   display:none;
 }
 
 .page.active{
   display:block;
-  }
-
-  /* ================= TASK SYSTEM STYLE ================= */
-
-.task-card{
-  background: #1e1e2f;
-  padding: 15px;
-  border-radius: 18px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: 0.3s ease;
 }
 
-.task-card:hover{
-  transform: translateY(-3px);
+/* TASK CARD */
+.task-card{
+  background:#0f172a;
+  padding:15px;
+  border-radius:18px;
+  margin-bottom:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
 }
 
 .task-card span{
-  font-size: 14px;
-  color: #fff;
+  font-size:14px;
+  color:white;
 }
 
 .task-card button{
-  background: linear-gradient(45deg,#4e73df,#224abe);
-  border: none;
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: 0.3s ease;
+  background:linear-gradient(45deg,#4e73df,#224abe);
+  border:none;
+  color:white;
+  padding:8px 18px;
+  border-radius:20px;
+  font-size:13px;
 }
 
-.task-card button:hover{
-  opacity: 0.9;
-}
-
-.task-card button:disabled{
-  background: #28a745;
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-/* Completed state */
 .task-card button.completed{
-  background: #28a745;
+  background:#22c55e;
 }
-
-/* Task Title & Reward Optional */
-.task-title{
-  font-weight: 600;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-.task-reward{
-  font-size: 12px;
-  color: #00ff99;
-  margin-top: 3px;
-  }
-
 
 /* SUPPORT GRID */
 
@@ -308,10 +273,8 @@ margin-top:40px;
 padding:0 10px;
 }
 
-/* SUPPORT CARD */
-
-.support-card{
-background:#0f1725;
+.support-box{
+background:#0f172a;
 border-radius:20px;
 padding:25px 15px;
 text-align:center;
@@ -319,8 +282,6 @@ color:white;
 border:1px solid rgba(255,255,255,0.05);
 box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
-
-/* ICON */
 
 .support-icon{
 width:55px;
@@ -335,71 +296,17 @@ font-size:24px;
 margin-bottom:10px;
 }
 
-/* TEXT */
-
-.support-card h3{
+.support-box h3{
 font-size:15px;
 margin:5px 0;
 }
 
-.support-card p{
+.support-box p{
 font-size:12px;
 opacity:0.7;
 }
 
-
-
-.ad-loading{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.65);
-backdrop-filter:blur(8px);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:9999;
-display:none;
-}
-
-.ad-box{
-background:rgba(30,30,40,0.9);
-padding:30px;
-border-radius:20px;
-text-align:center;
-width:85%;
-max-width:320px;
-color:white;
-box-shadow:0 0 20px rgba(0,0,0,0.5);
-}
-
-.loader{
-width:40px;
-height:40px;
-border:4px solid rgba(255,255,255,0.2);
-border-top:4px solid white;
-border-radius:50%;
-margin:auto;
-margin-bottom:15px;
-animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-}
-
-.ad-box button{
-margin-top:15px;
-padding:10px 20px;
-border:none;
-border-radius:10px;
-background:#111;
-color:white;
-}
-
+/* VIDEO CARD */
 
 .video-card{
 background:linear-gradient(180deg,#0f172a,#020617);
@@ -410,27 +317,6 @@ color:white;
 box-shadow:0 0 30px rgba(0,0,0,0.5);
 }
 
-.play-btn{
-font-size:40px;
-background:#1e293b;
-width:70px;
-height:70px;
-line-height:70px;
-border-radius:50%;
-margin:0 auto 15px;
-}
-
-.video-card h3{
-font-size:22px;
-margin-bottom:10px;
-}
-
-.video-card p{
-opacity:0.8;
-font-size:14px;
-margin-bottom:20px;
-}
-
 .video-card button{
 background:#4f7cff;
 border:none;
@@ -439,19 +325,9 @@ border-radius:10px;
 color:white;
 font-size:16px;
 cursor:pointer;
-margin-bottom:10px;
 }
 
-.video-player{
-display:none;
-margin-top:10px;
-}
-
-.video-player iframe{
-width:100%;
-height:220px;
-border-radius:10px;
-}
+/* VIDEO */
 
 .video-container{
 position:relative;
