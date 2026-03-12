@@ -299,11 +299,17 @@ margin-bottom:10px;
 .support-box h3{
 font-size:15px;
 margin:5px 0;
+color:white;
 }
 
 .support-box p{
 font-size:12px;
-opacity:0.7;
+color:#9aa4b2;
+opacity:1;
+}
+
+.support-icon{
+color:white;
 }
 
 /* VIDEO CARD */
