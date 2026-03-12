@@ -76,14 +76,14 @@ font-size:14px;
 
 /* ===== BIG AD CARD ===== */
 .big-ad-card{
-background:#eef3fb;
+background:#0f172a;
 padding:25px;
 border-radius:25px;
 margin-top:20px;
 text-align:center;
 border:2px solid #dbe4f7;
 transition:0.3s;
-color:#000;
+color:white;
 }
 
 .big-ad-card h2{
