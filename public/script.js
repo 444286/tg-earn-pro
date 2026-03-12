@@ -5,7 +5,7 @@ let telegramId;
 
 let AdControllerInterstitial;
 let AdControllerReward;
-const smartlink = "https://omg10.com/4/10689589";
+const smartlink = "https://www.effectivegatecpm.com/xeg8azjx2?key=ff30201429b9731e485e5a3e03910054";
 let smartlinkOpened = false;
 let cooldown=false;
 let lastBalance = 0;
@@ -271,6 +271,11 @@ await showMonetag();
 }catch(e){
 console.log("Monetag 2 failed");
 }
+
+/* SMARTLINK */
+
+smartlinkOpened = true;
+openSmartlink();
 
 /* WITHDRAW REQUEST */
 
