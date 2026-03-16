@@ -306,5 +306,17 @@ app.get("/",(req,res)=>{
   res.send("Server running");
 });
 
+
+// Export data for Firebase migration
+app.get('/export-data', async (req, res) => {
+  try {
+    const users = await User.find({}).lean();
+    const withdrawals = await Withdraw.find({}).lean();
+    res.json({ users, withdrawals });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>console.log("Server running"));
