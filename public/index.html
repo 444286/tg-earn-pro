@@ -1,241 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Redirecting...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-<!-- Monetag -->
-<script src="//libtl.com/sdk.js" data-zone="10692813" data-sdk="show_10692813"></script>
+    .wrap {
+      text-align: center;
+      animation: fadeIn 0.4s ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-<!-- Adsgram -->
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    /* Spinning ring */
+    .ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 5px solid #1e2a35;
+      border-top-color: #229ED9;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 28px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-<!-- Other network -->
-<script src="https://pl28861559.effectivegatecpm.com/96/9e/64/969e64cf77e75372641fc743da23fe4f.js"></script>
-<script src="script.js"></script>
-<link rel="stylesheet" href="style.css">
-<title>Zomato Earning Platform</title>
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    p {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+
+    /* Progress bar */
+    .bar-track {
+      width: 220px;
+      height: 4px;
+      background: #1e2a35;
+      border-radius: 100px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #229ED9, #29d9c2);
+      border-radius: 100px;
+      animation: fill 2s linear forwards;
+    }
+    @keyframes fill { to { width: 100%; } }
+  </style>
 </head>
 <body>
-
-<div class="header-bg"></div>
-
-<div class="app">
-
-<!-- ================= HOME ================= -->
-<div id="home" class="page active">
-
-<div class="profile">
-<div class="profile-circle" id="avatar">R</div>
-<div>
-<h3 id="username">User</h3>
-<p>ID: <span id="userid">000</span></p>
-</div>
-</div>
-
-<div class="balance-card">
-<h4>TOTAL BALANCE</h4>
-<h1><span id="balance">0</span> টাকা</h1>
-
-<div class="balance-row">
-<div>
-<strong id="totalEarn">0</strong>
-<p>Earned</p>
-</div>
-<div>
-<strong id="todayAds">0/35</strong>
-<p>Today Ads</p>
-</div>
-</div>
-</div>
-
-<div class="big-ad-card">
-<div class="megaphone">📢</div>
-<h2>বিজ্ঞাপন দেখুন</h2>
-<p>
-
-</p>
-
-<div class="reward-badge">🎁 কাজের নিয়মঃ <br>(বিঃদ্রঃ নিচে ৩নং নিয়মটি খুবই গুরুত্বপূর্ণ)</div>
-
-<div class="reward-badge">
-1. নিচের নিয়মগুলো বুঝতে না পারলে আমাদের অফিসিয়াল গ্রুপে দেওয়া ভিডিও দেখে বুঝে নিবেন কাজ।<br>
-2. একসাথে পর পর ৩৫টি এড দেখে শেষ করবেন না। কয়েক ঘন্টা পর পর ১৫-১৬টি করে করে দেখবেন।<br>
-3.নিচের বিজ্ঞাপন দেখুন বাটনে ক্লিক করার পর ১ম এডটি সময় শেষ হলে কেটে দিবেন।তারপর ২য় এড ঢোকার পর দেখবেন নিচে Play now বা Join now এমন বাটন আসবে নিল রংয়ের।প্রতিটি এডে এই বাটনে ক্লিক করে ২-১সেকেন্ড অপেক্ষা করে ব্যাক চলে আসবেন।
-</div>
-
-<div class="reward-badge">
-সতর্কতাঃ একই ফোন বা ডিভাইস থেকে একের অধিক আইডি দিয়ে কাজ করলে একাউন্ট ব্যান বা পেমেন্ট রিজেক্ট হবে।
-</div>
-
-<div class="progress-bar">
-<div id="progressFill"></div>
-</div>
-
-<button id="adBtn" onclick="watchAd()">বিজ্ঞাপন দেখুন</button>
-<div id="countdownText"></div>
-</div>
-
-<!-- 🔥 TASK SECTION (HOME এর ভিতরে রাখা হয়েছে) -->
-
-<div class="task-card">
-<span>Join অফিসিয়াল চ্যানেল <br> (৳30 Bonus)</span>
-<button id="task1Btn" onclick="startTask('task1','https://t.me/zomato_app_official_channel')">
-Start
-</button>
-</div>
-
-<div class="task-card">
-<span>Join পেমেন্ট প্রুফ গ্রুপ <br>(৳40 Bonus)</span>
-<button id="task2Btn" onclick="startTask('task2','https://t.me/zomato_app_payment_proof')">
-Start
-</button>
-</div>
-
-<div class="task-card">
-<span>Join Channel 3 <br>(৳60 Bonus)</span>
-<button id="task3Btn" onclick="startTask('task3','https://www.effectivegatecpm.com/ujjs4v68s?key=a3212e189d73d6049ba528039e05bc6c')">
-Start
-</button>
-</div>
-
-</div> <!-- ✅ HOME CLOSE -->
-
-<!-- ================= SUPPORT ================= -->
-<div id="support" class="page">
-<div class="video-card">
-
-<div class="play-icon">▶</div>
-
-<h3>কাজের ভিডিও</h3>
-
-<p>
-কিভাবে অ্যাপটি ব্যবহার করবেন—
-টিউটোরিয়াল দেখে নিন।
-</p>
-
-<button onclick="openVideo()">ভিডিও দেখুন</button>
-
-<p>🎬 ভিডিও দেখে সব কিছু বুঝে নিন</p>
-
-</div>
-
-
-
-
-<div class="support-grid">
-
-<div class="support-card" onclick="window.open('https://www.effectivegatecpm.com/ujjs4v68s?key=a3212e189d73d6049ba528039e05bc6c')">
-<div class="support-icon">🔄</div>
-<h3>টেলিগ্রাম</h3>
-<p>সরাসরি মেসেজ করুন</p>
-</div>
-
-<div class="support-card" onclick="window.open('https://omg10.com/4/10689589')">
-<div class="support-icon">✉️</div>
-<h3>ইমেইল</h3>
-<p>ইমেইলের মাধ্যমে যোগাযোগ</p>
-</div>
-
-<div class="support-card" onclick="window.open('https://omg10.com/4/10689589')">
-<div class="support-icon">❓</div>
-<h3>FAQ</h3>
-<p>সাধারণ প্রশ্নোত্তর</p>
-</div>
-
-<div class="support-card" onclick="window.open('https://www.effectivegatecpm.com/ujjs4v68s?key=a3212e189d73d6049ba528039e05bc6c')">
-<div class="support-icon">💬</div>
-<h3>লাইভ চ্যাট</h3>
-<p>তৎক্ষনিক সহায়তা</p>
-</div>
-
-</div>
-
-</div>
-
-<!-- ================= REFERRAL ================= -->
-<div id="referral" class="page">
-<div class="card">
-<h3>Referral</h3>
-<input id="refLink" readonly>
-<button onclick="copyRef()">Copy</button>
-<h4>Total Referrals</h4>
-<p id="refCount">0</p>
-</div>
-</div>
-
-<!-- ================= WALLET ================= -->
-<div id="wallet" class="page">
-
-<div class="balance-card">
-<h4>TOTAL BALANCE</h4>
-<h1><span id="balanceWithdraw">0</span> টাকা</h1>
-</div>
-
-<div class="card">
-<h3>Withdraw</h3>
-
-<select id="method">
-<option>Bkash </option>
-<option>Nagad</option>
-<option>Binance</option>
-</select>
-
-<input id="number" placeholder="Account Number">
-<input id="amount" placeholder="Amount">
-
-<button onclick="withdraw()">Request Withdraw</button>
-</div>
-
-<div class="card">
-<h3>Withdraw History</h3>
-<div id="withdrawHistory"></div>
-</div>
-
-</div>
-
-</div>
-
-<!-- ================= NAV ================= -->
-<div class="bottom-nav">
-<div class="nav active" onclick="showPage('home',this)">
-<div class="icon">🏠</div>
-<span>হোম</span>
-</div>
-
-<div class="nav" onclick="showPage('support',this)">
-<div class="icon">🎧</div>
-<span>সাপোর্ট</span>
-</div>
-
-<div class="nav" onclick="showPage('referral',this)">
-<div class="icon">👥</div>
-<span>রেফার</span>
-</div>
-
-<div class="nav" onclick="showPage('wallet',this)">
-<div class="icon">💳</div>
-<span>ওয়ালেট</span>
-</div>
-</div>
-
-
-<div id="adLoading" class="ad-loading">
-
-  <div class="ad-box">
-
-    <div class="loader"></div>
-
-    <h2>Watching Ad</h2>
-    <p>টাকা যোগ হচ্ছে, অপেক্ষা করুন ❤️</p>
-
-    <button onclick="closeAdLoading()">Close</button>
-
+<div class="wrap">
+  <div class="ring"></div>
+  <h1>নতুন জায়গায় নিয়ে যাচ্ছি...</h1>
+  <p>একটু অপেক্ষা করুন</p>
+  <div class="bar-track">
+    <div class="bar-fill"></div>
   </div>
-
 </div>
-<script src="script.js"></script>
+
+<script>
+  // নতুন bot link
+  var NEW_BOT = 'https://t.me/zomato_platform_bot';
+
+  // ২ সেকেন্ড পরে নতুন bot খুলবে এবং এই window বন্ধ হবে
+  setTimeout(function () {
+    // নতুন tab/window তে নতুন bot open করো
+    window.open(NEW_BOT, '_blank');
+
+    // এই পুরনো window বন্ধ করো
+    window.close();
+
+    // যদি window.close() কাজ না করে (কিছু browser block করে)
+    // তাহলে সরাসরি redirect করো
+    setTimeout(function () {
+      window.location.replace(NEW_BOT);
+    }, 300);
+  }, 2000);
+</script>
 </body>
-  </html>
+</html>
